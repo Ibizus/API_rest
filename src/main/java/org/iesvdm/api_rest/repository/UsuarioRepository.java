@@ -1,2 +1,9 @@
-package org.iesvdm.api_rest.repository;public class UsuarioRepository {
+package org.iesvdm.api_rest.repository;
+
+import org.iesvdm.api_rest.domain.Usuario;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 }
