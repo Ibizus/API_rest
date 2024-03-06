@@ -9,7 +9,7 @@ import org.iesvdm.api_rest.repository.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class MenuService {
@@ -20,6 +20,20 @@ public class MenuService {
     MenuRepository menuRepository;
 
     public List<Menu> all(){return this.menuRepository.findAll();}
+
+    public List<Menu> filter(Optional<String> wordOptional){
+
+        Set<Menu> encontrados = new HashSet<>();
+
+        if(wordOptional.isPresent()){
+            encontrados.addAll(menuRepository.findMenusByNombreContainingIgnoreCase(wordOptional.get()));
+            encontrados.addAll(menuRepository.findMenusByPrimeroContainingIgnoreCase(wordOptional.get()));
+            encontrados.addAll(menuRepository.findMenusBySegundoContainingIgnoreCase(wordOptional.get()));
+            encontrados.addAll(menuRepository.findMenusByPostreContainingIgnoreCase(wordOptional.get()));
+        }
+
+        return new ArrayList<>(encontrados);
+    }
 
     public Menu save(Menu menu){
         return this.menuRepository.save(menu);

@@ -11,7 +11,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("v1/api/bodas")
+@RequestMapping("/v1/api/bodas")
 public class BodaController {
 
     @Autowired

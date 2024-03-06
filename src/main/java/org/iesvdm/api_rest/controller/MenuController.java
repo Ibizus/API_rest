@@ -8,10 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping("v1/api/menus")
+@RequestMapping("/v1/api/menus")
 public class MenuController {
 
     @Autowired
@@ -21,6 +22,14 @@ public class MenuController {
     public List<Menu> all() {
         return menuService.all();
     }
+
+    @GetMapping(value = {"","/"}, params = "filtrar")
+    public List<Menu> all(@RequestParam("filtrar")Optional<String> filtrarOptional){
+
+        log.info("Accediendo a menús con filtrado en todos los campos");
+        return this.menuService.filter(filtrarOptional);
+    }
+
 
     @PostMapping({"","/"})
     public Menu newMenu(@RequestBody Menu menu) {

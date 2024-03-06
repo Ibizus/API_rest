@@ -18,6 +18,13 @@ public class GeneralControllerAdvice {
     @ResponseBody
     @ExceptionHandler
     @ResponseStatus
+    public String notCouplingIdException(NotCouplingIdException notCouplingIdException){
+        return notCouplingIdException.getMessage();
+    }
+
+    @ResponseBody
+    @ExceptionHandler
+    @ResponseStatus
     public String entityNotFoundHandler(Exception exception){
         return exception.getMessage();
     }
