@@ -12,7 +12,6 @@ public interface BodaRepository extends JpaRepository<Boda, Long> {
 
     public List<Boda> findBodaByNombreContainingIgnoreCaseOrderByNombreAsc(String nombre);
 
-    public List<Boda> findBodaByUsuario(Usuario usuario);
-
+    public Boda findBodaByUsuario(Usuario usuario);
 
 }

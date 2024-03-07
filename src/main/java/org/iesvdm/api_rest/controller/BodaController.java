@@ -2,6 +2,7 @@ package org.iesvdm.api_rest.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.iesvdm.api_rest.domain.Boda;
+import org.iesvdm.api_rest.domain.Usuario;
 import org.iesvdm.api_rest.service.BodaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,11 @@ public class BodaController {
     @GetMapping( "/{id}")
     public Boda one(@PathVariable("id") Long id) {
         return bodaService.one(id);
+    }
+
+    @GetMapping(value = {"","/"}, params = "user")
+    public Boda findByUser(@RequestBody Usuario usuario){
+        return this.bodaService.findByUser(usuario);
     }
 
     @PutMapping("/{id}")

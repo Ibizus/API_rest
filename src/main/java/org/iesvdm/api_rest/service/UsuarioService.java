@@ -5,6 +5,10 @@ import org.iesvdm.api_rest.exception.EntityNotFoundException;
 import org.iesvdm.api_rest.exception.NotCouplingIdException;
 import org.iesvdm.api_rest.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +20,12 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     public List<Usuario> all(){return this.usuarioRepository.findAll();}
+
+    public Page<Usuario> findByName(String cadena){
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "nombre"));
+        return this.usuarioRepository.findUsuariosByNombreContainsIgnoreCase(cadena, pageable);
+    }
 
     public Usuario save(Usuario usuario){return this.usuarioRepository.save(usuario);}
 
