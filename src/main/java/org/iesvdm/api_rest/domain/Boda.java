@@ -1,10 +1,8 @@
 package org.iesvdm.api_rest.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -37,6 +35,8 @@ public class Boda {
     @OneToMany(mappedBy = "boda", fetch = FetchType.EAGER)
     private Set<Menu> menus = new HashSet<>();
 
+    @ToString.Exclude
+    @JsonIgnore
     @ManyToOne
     private Usuario usuario;
 }

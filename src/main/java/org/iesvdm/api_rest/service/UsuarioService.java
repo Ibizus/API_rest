@@ -27,6 +27,11 @@ public class UsuarioService {
         return this.usuarioRepository.findUsuariosByNombreContainsIgnoreCase(cadena, pageable);
     }
 
+    public Page<Usuario> findByApellido(String cadena){
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "apellido1"));
+        return this.usuarioRepository.findUsuariosByApellido1ContainingIgnoreCaseOrApellido2ContainingIgnoreCase(cadena, cadena, pageable);
+    }
+
     public Usuario save(Usuario usuario){return this.usuarioRepository.save(usuario);}
 
     public Usuario one(Long id){

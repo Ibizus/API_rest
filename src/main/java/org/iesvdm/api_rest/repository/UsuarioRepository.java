@@ -12,4 +12,6 @@ import java.util.List;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     Page<Usuario> findUsuariosByNombreContainsIgnoreCase(String nombre, Pageable pageable);
+
+    Page<Usuario> findUsuariosByApellido1ContainingIgnoreCaseOrApellido2ContainingIgnoreCase(String apellido1, String apellido2, Pageable pageable);
 }

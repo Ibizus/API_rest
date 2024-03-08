@@ -23,9 +23,14 @@ public class UsuarioController {
         return usuarioService.all();
     }
 
-    @GetMapping(value = {"", "/"}, params = "buscar")
-    public Page<Usuario> findByName(@RequestParam("buscar") String buscar){
-        return usuarioService.findByName(buscar);
+    @GetMapping(value = {"", "/"}, params = "nombre")
+    public Page<Usuario> findByName(@RequestParam("nombre") String cadena){
+        return usuarioService.findByName(cadena);
+    }
+
+    @GetMapping(value = {"", "/"}, params = "apellido")
+    public Page<Usuario> findByApellido(@RequestParam("apellido") String cadena){
+        return usuarioService.findByApellido(cadena);
     }
 
     @PostMapping({"","/"})

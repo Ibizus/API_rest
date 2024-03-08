@@ -18,7 +18,7 @@ public class MenuController {
     @Autowired
     private MenuService menuService;
 
-    @GetMapping({"", "/"})
+    @GetMapping(value = {"", "/"})
     public List<Menu> all() {
         return menuService.all();
     }

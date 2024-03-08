@@ -10,8 +10,5 @@ import java.util.List;
 @Repository
 public interface BodaRepository extends JpaRepository<Boda, Long> {
 
-    public List<Boda> findBodaByNombreContainingIgnoreCaseOrderByNombreAsc(String nombre);
-
     public Boda findBodaByUsuario(Usuario usuario);
-
 }

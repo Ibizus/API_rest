@@ -1,10 +1,8 @@
 package org.iesvdm.api_rest.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
@@ -23,6 +21,8 @@ public class Menu {
     private String segundo;
     private String postre;
 
+    @JsonIgnore
+    @ToString.Exclude
     @ManyToOne
     private Boda boda;
 }

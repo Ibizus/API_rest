@@ -11,11 +11,9 @@ import java.util.List;
 @Repository
 public interface MenuRepository extends JpaRepository<Menu, Long> {
 
-    public List<Menu> findMenusByNombreContainingIgnoreCase(String nombre);
+    // Metodo que filtra por nombre, primero, segundo y postre y recibe 4 parametros
+    // En su ejecución usa la misma cadena pasada como parametro en el endpoint para los 4 campos del método
+    // consiguiendo un filtrado de la coleccion por todos sus campos.
+    public List<Menu> findMenusByNombreContainingIgnoreCaseOrPrimeroContainingIgnoreCaseOrSegundoContainingIgnoreCaseOrPostreContainingIgnoreCase(String cadena1, String cadena2, String cadena3, String cadena4);
 
-    public List<Menu> findMenusByPrimeroContainingIgnoreCase(String primero);
-
-    public List<Menu> findMenusBySegundoContainingIgnoreCase(String segundo);
-
-    public List<Menu> findMenusByPostreContainingIgnoreCase(String postre);
 }
