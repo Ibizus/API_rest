@@ -19,12 +19,13 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public List<Usuario> all(){return this.usuarioRepository.findAll();}
+    public List<Usuario> all(){
+        return this.usuarioRepository.findAll();}
 
     public Page<Usuario> findByName(String cadena){
 
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "nombre"));
-        return this.usuarioRepository.findUsuariosByNombreContainsIgnoreCase(cadena, pageable);
+        return this.usuarioRepository.findUsuariosByNombreContainingIgnoreCase(cadena, pageable);
     }
 
     public Page<Usuario> findByApellido(String cadena){

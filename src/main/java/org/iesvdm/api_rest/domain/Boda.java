@@ -37,6 +37,6 @@ public class Boda {
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Usuario usuario;
 }

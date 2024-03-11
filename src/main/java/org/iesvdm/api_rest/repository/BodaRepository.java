@@ -11,4 +11,5 @@ import java.util.List;
 public interface BodaRepository extends JpaRepository<Boda, Long> {
 
     public Boda findBodaByUsuario(Usuario usuario);
+
 }

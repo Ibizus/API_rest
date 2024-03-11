@@ -25,11 +25,9 @@ public class MenuController {
 
     @GetMapping(value = {"","/"}, params = "filtrar")
     public List<Menu> all(@RequestParam("filtrar")Optional<String> filtrarOptional){
-
         log.info("Accediendo a menús con filtrado en todos los campos");
         return this.menuService.filter(filtrarOptional);
     }
-
 
     @PostMapping({"","/"})
     public Menu newMenu(@RequestBody Menu menu) {

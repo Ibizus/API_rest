@@ -24,8 +24,8 @@ public class BodaService {
 
     public List<Boda> all(){return this.bodaRepository.findAll();}
 
-    public Boda findByUser(Usuario user){
-        return this.bodaRepository.findBodaByUsuario(user);
+    public Boda findByUser(Long user){
+        return this.bodaRepository.findBodaByUsuario(this.usuarioRepository.findById(user).get());
     }
 
     public Boda save(Boda boda){return this.bodaRepository.save(boda);}

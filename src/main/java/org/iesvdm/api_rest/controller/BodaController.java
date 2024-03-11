@@ -23,20 +23,20 @@ public class BodaController {
         return bodaService.all();
     }
 
-    @PostMapping({"","/"})
-    public Boda newBoda(@RequestBody Boda boda) {
-        log.info("Creando una boda = " + boda);
-        return this.bodaService.save(boda);
-    }
-
     @GetMapping( "/{id}")
     public Boda one(@PathVariable("id") Long id) {
         return bodaService.one(id);
     }
 
     @GetMapping(value = {"","/"}, params = "user")
-    public Boda findByUser(@RequestBody Usuario usuario){
-        return this.bodaService.findByUser(usuario);
+    public Boda findByUser(@RequestBody Long user){
+        return this.bodaService.findByUser(user);
+    }
+
+    @PostMapping({"","/"})
+    public Boda newBoda(@RequestBody Boda boda) {
+        log.info("Creando una boda = " + boda);
+        return this.bodaService.save(boda);
     }
 
     @PutMapping("/{id}")
