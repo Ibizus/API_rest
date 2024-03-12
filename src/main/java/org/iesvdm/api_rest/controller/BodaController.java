@@ -5,6 +5,7 @@ import org.iesvdm.api_rest.domain.Boda;
 import org.iesvdm.api_rest.domain.Usuario;
 import org.iesvdm.api_rest.service.BodaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class BodaController {
     }
 
     @GetMapping(value = {"","/"}, params = "user")
-    public Boda findByUser(@RequestParam Long user){
+    public Page<Boda> findByUser(@RequestParam Long user){
         return this.bodaService.findByUser(user);
     }
 

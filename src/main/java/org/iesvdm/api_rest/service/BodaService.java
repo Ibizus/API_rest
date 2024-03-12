@@ -7,6 +7,10 @@ import org.iesvdm.api_rest.exception.NotCouplingIdException;
 import org.iesvdm.api_rest.repository.BodaRepository;
 import org.iesvdm.api_rest.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,8 +28,9 @@ public class BodaService {
 
     public List<Boda> all(){return this.bodaRepository.findAll();}
 
-    public Boda findByUser(Long user){
-        return this.bodaRepository.findBodaByUsuario(this.usuarioRepository.findById(user).get());
+    public Page<Boda> findByUser(Long user){
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id"));
+        return this.bodaRepository.findBodaByUsuario_Id(user, pageable);
     }
 
     public Boda save(Boda boda){return this.bodaRepository.save(boda);}
