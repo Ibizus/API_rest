@@ -29,7 +29,7 @@ public class BodaController {
     }
 
     @GetMapping(value = {"","/"}, params = "user")
-    public Boda findByUser(@RequestBody Long user){
+    public Boda findByUser(@RequestParam Long user){
         return this.bodaService.findByUser(user);
     }
 

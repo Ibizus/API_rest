@@ -12,4 +12,6 @@ public interface BodaRepository extends JpaRepository<Boda, Long> {
 
     public Boda findBodaByUsuario(Usuario usuario);
 
+    public Boda findBodaByUsuario_Id(Long id);
+
 }
