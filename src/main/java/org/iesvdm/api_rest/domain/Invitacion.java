@@ -16,6 +16,8 @@ public class Invitacion {
     @EqualsAndHashCode.Include
     private long id;
 
+    private String nombreInvitado;
+    private String emailInvitado;
     private Boolean aceptado;
     private String intolerancias;
 
