@@ -25,5 +25,6 @@ public class Invitado {
     @JsonIgnore
     @ToString.Exclude
     @OneToOne
+    @JoinColumn(name = "invitacion_id")
     private Invitacion invitacion;
 }

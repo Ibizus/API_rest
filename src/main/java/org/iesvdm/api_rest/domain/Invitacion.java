@@ -26,6 +26,6 @@ public class Invitacion {
     @ManyToOne
     private Boda boda;
 
-    @OneToOne
+    @OneToOne(mappedBy = "invitacion")
     private Invitado invitado;
 }

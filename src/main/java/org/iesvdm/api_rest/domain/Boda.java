@@ -33,7 +33,22 @@ public class Boda {
     private String region;
 
     @OneToMany(mappedBy = "boda", fetch = FetchType.EAGER)
+    private Set<Evento> eventos = new HashSet<>();
+
+    @OneToMany(mappedBy = "boda", fetch = FetchType.EAGER)
+    private Set<Tarea> tareas = new HashSet<>();
+
+    @OneToMany(mappedBy = "boda", fetch = FetchType.EAGER)
     private Set<Menu> menus = new HashSet<>();
+
+    @OneToMany(mappedBy = "boda", fetch = FetchType.EAGER)
+    private Set<Invitacion> invitaciones = new HashSet<>();
+
+    @OneToMany(mappedBy = "boda", fetch = FetchType.EAGER)
+    private Set<Regalo> regalos = new HashSet<>();
+
+    @OneToMany(mappedBy = "boda", fetch = FetchType.EAGER)
+    private Set<Foto> galeria = new HashSet<>();
 
     @ToString.Exclude
     @JsonIgnore

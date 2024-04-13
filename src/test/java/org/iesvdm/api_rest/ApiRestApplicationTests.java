@@ -59,10 +59,10 @@ class ApiRestApplicationTests {
     @Order(2)
     void crearBodas() {
 
-        boda1 = new Boda(0, "Mi Boda", LocalDate.now(), LocalTime.now(), "Alvaro", "Loli", "Finca Las Yeguas", "", "29600", "Yecla", "Malaga", new HashSet<>(), user);
-        boda2 = new Boda(0, "Boda Cuñis", LocalDate.now(), LocalTime.now(), "Paco", "Caro", "Finca El Agua", "", "29720", "Marbella", "Malaga", new HashSet<>(), user);
-        bodaRepository.save(boda1);
-        bodaRepository.save(boda2);
+//        boda1 = new Boda(0, "Mi Boda", LocalDate.now(), LocalTime.now(), "Alvaro", "Loli", "Finca Las Yeguas", "", "29600", "Yecla", "Malaga", new HashSet<>(), user);
+//        boda2 = new Boda(0, "Boda Cuñis", LocalDate.now(), LocalTime.now(), "Paco", "Caro", "Finca El Agua", "", "29720", "Marbella", "Malaga", new HashSet<>(), user);
+//        bodaRepository.save(boda1);
+//        bodaRepository.save(boda2);
     }
 
     @Test
@@ -83,7 +83,6 @@ class ApiRestApplicationTests {
     void asociaciones() {
         // AÑADE MENUS A BODAS:
         boda1.getMenus().forEach(System.out::println);
-
         user.getBodas().forEach(System.out::println);
     }
 }
