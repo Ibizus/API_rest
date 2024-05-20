@@ -1,13 +1,7 @@
 package org.iesvdm.api_rest;
 
-import org.iesvdm.api_rest.domain.Boda;
-import org.iesvdm.api_rest.domain.Evento;
-import org.iesvdm.api_rest.domain.Menu;
-import org.iesvdm.api_rest.domain.Usuario;
-import org.iesvdm.api_rest.repository.BodaRepository;
-import org.iesvdm.api_rest.repository.EventoRepository;
-import org.iesvdm.api_rest.repository.MenuRepository;
-import org.iesvdm.api_rest.repository.UsuarioRepository;
+import org.iesvdm.api_rest.domain.*;
+import org.iesvdm.api_rest.repository.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +22,10 @@ class ApiRestApplicationTests {
     MenuRepository menuRepository;
     @Autowired
     EventoRepository eventoRepository;
+    @Autowired
+    InvitacionRepository invitacionRepository;
+    @Autowired
+    RegaloRepository regaloRepository;
 
     Usuario admin;
     Usuario user;
@@ -41,6 +39,8 @@ class ApiRestApplicationTests {
     Evento cocktail;
     Evento banquete;
     Evento fiesta;
+    @Autowired
+    private TareaRepository tareaRepository;
 
 
     @BeforeEach
@@ -101,10 +101,54 @@ class ApiRestApplicationTests {
 
     @Test
     @Order(6)
+    void crearInvitaciones() {
+        Invitacion invitacion1 = new Invitacion(0, "Antonio", "antofenomeno@example.com", false, "", boda1, null);
+        invitacionRepository.save(invitacion1);
+    }
+
+    @Test
+    @Order(7)
+    void crearRegalos() {
+        Regalo regalo1 = new Regalo(0, "Viaje", false, boda1);
+        Regalo regalo2 = new Regalo(0, "Lavadora", false, boda1);
+        Regalo regalo3 = new Regalo(0, "Carrito bebe", false, boda1);
+        Regalo regalo4 = new Regalo(0, "Television", false, boda1);
+        Regalo regalo5 = new Regalo(0, "Bicicleta", false, boda1);
+        Regalo regalo6 = new Regalo(0, "Suscripcion", false, boda1);
+        Regalo regalo7 = new Regalo(0, "Cesta productos artesanos", false, boda1);
+        Regalo regalo8 = new Regalo(0, "Reloj", false, boda1);
+        Regalo regalo9 = new Regalo(0, "Zapatos", false, boda1);
+        Regalo regalo10 = new Regalo(0, "Viaje", false, boda1);
+        Regalo regalo11 = new Regalo(0, "Viaje", false, boda1);
+        Regalo regalo12 = new Regalo(0, "Viaje", false, boda1);
+        Regalo regalo13 = new Regalo(0, "Viaje", false, boda1);
+        Regalo regalo14 = new Regalo(0, "Viaje", false, boda1);
+        Regalo regalo15 = new Regalo(0, "Viaje", false, boda1);
+
+        regaloRepository.save(regalo1);
+    }
+
+    @Test
+    @Order(8)
+    void crearTareas() {
+        Tarea tare1 = new Tarea(0, "Disenar invitaciones", LocalDate.of(2024, 10, 15), false, boda1);
+        tareaRepository.save(tare1);
+    }
+
+    @Test
+    @Order(99)
     void asociaciones() {
         // AÑADE MENUS A BODAS:
         user.getBodas().add(boda1);
+        System.out.println("Bodas del user 1: ");
         user.getBodas().forEach(System.out::println);
+        System.out.println("Menus de la boda: ");
         boda1.getMenus().forEach(System.out::println);
+        System.out.println("Tareas boda: ");
+        boda1.getTareas().forEach(System.out::println);
+        System.out.println("Regalos boda: ");
+        boda1.getRegalos().forEach(System.out::println);
     }
+
+
 }
