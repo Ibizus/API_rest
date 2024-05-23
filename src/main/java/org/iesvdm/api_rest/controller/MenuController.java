@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
+@CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
 @RequestMapping("/v1/api/menus")
 public class MenuController {

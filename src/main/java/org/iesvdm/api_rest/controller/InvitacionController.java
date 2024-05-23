@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
+@CrossOrigin("*")
+//@CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
 @RequestMapping("/v1/api/invitaciones")
 public class InvitacionController {

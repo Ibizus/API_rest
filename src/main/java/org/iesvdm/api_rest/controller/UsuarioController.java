@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
+@CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
 @RequestMapping("/v1/api/usuarios")
 public class UsuarioController {

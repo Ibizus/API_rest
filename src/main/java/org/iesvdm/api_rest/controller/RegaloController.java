@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
 @RequestMapping("/v1/api/regalos")
 public class RegaloController {
