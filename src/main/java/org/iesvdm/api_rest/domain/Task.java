@@ -4,22 +4,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Menu {
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private long id;
 
-    private String name;
-    private String starter;
-    private String mainCourse;
-    private String dessert;
+    private String description;
+    private LocalDate deadline;
+    private Boolean completed;
 
     @JsonIgnore
     @ToString.Exclude
