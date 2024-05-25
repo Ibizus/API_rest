@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Menu {
+public class Photo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +17,6 @@ public class Menu {
     private long id;
 
     private String name;
-    private String starter;
-    private String mainCourse;
-    private String dessert;
 
     @JsonIgnore
     @ToString.Exclude

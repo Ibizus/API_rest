@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Menu {
+public class Guest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,12 +17,14 @@ public class Menu {
     private long id;
 
     private String name;
-    private String starter;
-    private String mainCourse;
-    private String dessert;
+    private String lastName1;
+    private String lastName2;
+    private String email;
+    private String phone;
 
     @JsonIgnore
     @ToString.Exclude
-    @ManyToOne
-    private Wedding wedding;
+    @OneToOne
+    @JoinColumn(name = "invitation_id")
+    private Invitation invitation;
 }

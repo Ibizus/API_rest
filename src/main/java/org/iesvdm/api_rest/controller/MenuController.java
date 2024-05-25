@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
+@CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
 @RequestMapping("/v1/api/menus")
 public class MenuController {
@@ -23,10 +24,10 @@ public class MenuController {
         return menuService.all();
     }
 
-    @GetMapping(value = {"","/"}, params = "filtrar")
-    public List<Menu> all(@RequestParam("filtrar")Optional<String> filtrarOptional){
+    @GetMapping(value = {"","/"}, params = "filter")
+    public List<Menu> all(@RequestParam("filter")Optional<String> optionalFilter){
         log.info("Accediendo a menús con filtrado en todos los campos");
-        return this.menuService.filter(filtrarOptional);
+        return this.menuService.filter(optionalFilter);
     }
 
     @PostMapping({"","/"})

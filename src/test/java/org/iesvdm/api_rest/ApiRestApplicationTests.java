@@ -5,7 +5,6 @@ import org.iesvdm.api_rest.repository.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,38 +15,38 @@ import java.util.HashSet;
 class ApiRestApplicationTests {
 
     @Autowired
-    UsuarioRepository usuarioRepository;
+    UserRepository userRepository;
     @Autowired
-    BodaRepository bodaRepository;
+    WeddingRepository weddingRepository;
     @Autowired
     MenuRepository menuRepository;
     @Autowired
-    EventoRepository eventoRepository;
+    EventRepository eventRepository;
     @Autowired
-    InvitacionRepository invitacionRepository;
+    InvitationRepository invitationRepository;
     @Autowired
-    RegaloRepository regaloRepository;
+    GiftRepository giftRepository;
 
-    Usuario admin;
-    Usuario user;
-    Boda boda1;
-    Boda boda2;
+    User admin;
+    User user;
+    Wedding wedding1;
+    Wedding wedding2;
     Menu menuInfantil;
     Menu menuVegano;
     Menu menuCarne;
     Menu menuPescado;
-    Evento ceremonia;
-    Evento cocktail;
-    Evento banquete;
-    Evento fiesta;
+    Event ceremonia;
+    Event cocktail;
+    Event banquete;
+    Event fiesta;
     @Autowired
-    private TareaRepository tareaRepository;
+    private TaskRepository taskRepository;
 
 
     @BeforeEach
     void inicializa(){
-        user = usuarioRepository.findById(1L).orElse(null);
-        boda1 = bodaRepository.findById(1L).orElse(null);
+        user = userRepository.findById(1L).orElse(null);
+        wedding1 = weddingRepository.findById(1L).orElse(null);
     }
 
     @Test
@@ -57,33 +56,33 @@ class ApiRestApplicationTests {
 
     @Test
     @Order(2)
-    void crearUsuarios(){
-        admin = new Usuario(0, "Hector", "Lopez", "Diaz", "calle Veleta 2", "", "29651", "Mijas", "Malaga", "hlopdia699@g.educaand.es","665661519", new HashSet<>());
-        user = new Usuario(0, "Alvaro", "Moreno", "Barreiro", "calle de la Luz 25", "", "29640", "Fuengirola", "Malaga", "alvaro@educaand.es","666666666", new HashSet<>());
-        usuarioRepository.save(admin);
-        usuarioRepository.save(user);
+    void crearUsers(){
+        admin = new User(0, "Hector", "Lopez", "Diaz", "calle Veleta 2", "", "29651", "Mijas", "Malaga", "hlopdia699@g.educaand.es","665661519", new HashSet<>());
+        user = new User(0, "Alvaro", "Moreno", "Barreiro", "calle de la Luz 25", "", "29640", "Fuengirola", "Malaga", "alvaro@educaand.es","666666666", new HashSet<>());
+        userRepository.save(admin);
+        userRepository.save(user);
     }
 
     @Test
     @Order(3)
-    void crearEventos() {
-        ceremonia = new Evento(0, "Iglesia Niño Jesús", "Celebración del matrimonio", LocalTime.of(18, 0), boda1);
-        cocktail = new Evento(0, "Jardín Finca Las Yeguas", "Bienvenida a la finca", LocalTime.of(19, 30), boda1);
-        banquete = new Evento(0, "Salón interior", "Banquete de bodas", LocalTime.of(21, 0), boda1);
-        fiesta = new Evento(0, "Discoteca", "Espectáculo y barra libre para todos", LocalTime.of(23, 30), boda1);
-        eventoRepository.save(ceremonia);
-        eventoRepository.save(cocktail);
-        eventoRepository.save(banquete);
-        eventoRepository.save(fiesta);
+    void crearEvents() {
+        ceremonia = new Event(0, "Iglesia Niño Jesús", "Celebración del matrimonio", LocalTime.of(18, 0), wedding1);
+        cocktail = new Event(0, "Jardín Finca Las Yeguas", "Bienvenida a la finca", LocalTime.of(19, 30), wedding1);
+        banquete = new Event(0, "Salón interior", "Banquete de weddings", LocalTime.of(21, 0), wedding1);
+        fiesta = new Event(0, "Discoteca", "Espectáculo y barra libre para todos", LocalTime.of(23, 30), wedding1);
+        eventRepository.save(ceremonia);
+        eventRepository.save(cocktail);
+        eventRepository.save(banquete);
+        eventRepository.save(fiesta);
     }
 
     @Test
     @Order(4)
     void crearMenus() {
-        menuInfantil = new Menu(0, "Infantil", "Macarrones con queso", "Salchichas", "Yogur", boda1);
-        menuVegano = new Menu(0, "Vegano", "Ensalada", "Lasaña vegana", "Pastel de manzana vegano", boda1);
-        menuCarne = new Menu(0, "Carne", "Crema de Remolacha", "Solomillo", "Coulant", boda1);
-        menuPescado = new Menu(0, "Pescado", "Ensalada", "Lubina a la sal", "Tarta de queso", boda1);
+        menuInfantil = new Menu(0, "Infantil", "Macarrones con queso", "Salchichas", "Yogur", wedding1);
+        menuVegano = new Menu(0, "Vegano", "Ensalada", "Lasaña vegana", "Pastel de manzana vegano", wedding1);
+        menuCarne = new Menu(0, "Carne", "Crema de Remolacha", "Solomillo", "Coulant", wedding1);
+        menuPescado = new Menu(0, "Pescado", "Ensalada", "Lubina a la sal", "Tarta de queso", wedding1);
         menuRepository.save(menuInfantil);
         menuRepository.save(menuVegano);
         menuRepository.save(menuCarne);
@@ -92,19 +91,19 @@ class ApiRestApplicationTests {
 
     @Test
     @Order(5)
-    void crearBodas() {
+    void crearWeddings() {
 
-        boda1 = new Boda(0, "Mi Boda", LocalDate.now(), LocalTime.now(), "Alvaro", "Loli", "Finca Las Yeguas", "", "29600", "Yecla", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
-        boda2 = new Boda(0, "Boda Cuñis", LocalDate.now(), LocalTime.now(), "Paco", "Caro", "Finca El Agua", "", "29720", "Marbella", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
-        bodaRepository.save(boda1);
-        bodaRepository.save(boda2);
+        wedding1 = new Wedding(0, "Mi Wedding", LocalDate.now(), LocalTime.now(), "Alvaro", "Loli", "Finca Las Yeguas", "", "29600", "Yecla", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
+        wedding2 = new Wedding(0, "Wedding Cuñis", LocalDate.now(), LocalTime.now(), "Paco", "Caro", "Finca El Agua", "", "29720", "Marbella", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
+        weddingRepository.save(wedding1);
+        weddingRepository.save(wedding2);
     }
 
     @Test
     @Order(6)
-    void crearInvitaciones() {
+    void crearInvitations() {
 
-        String[] listaInvitaciones = {
+        String[] listaInvitations = {
                 "Francisco", "Antonio", "José", "Manuel", "María", "Ana", "Carmen", "Elena", "Isabel",
                 "Laura", "David", "Javier", "Daniel", "Sofía", "Luis", "Miguel", "Rosa", "Carlos",
                 "Pedro", "Raúl", "Andrea", "Patricia", "Lucía", "Diego", "Ángela", "Natalia", "Roberto",
@@ -120,18 +119,18 @@ class ApiRestApplicationTests {
                 "Leo", "Eric", "Izan", "Ariadna", "Noa", "Enzo", "Marco", "Ian"
         };
 
-        for (String nombreInvitado : listaInvitaciones) {
+        for (String nombreInvitado : listaInvitations) {
             String nombreCorreo = Normalizer.normalize(nombreInvitado, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").replaceAll("\\s+", "").toLowerCase();
-            Invitacion invitacion = new Invitacion(0, nombreInvitado, nombreCorreo+"@email.com", false, "", boda1, null);
-            invitacionRepository.save(invitacion);
+            Invitation invitation = new Invitation(0, nombreInvitado, nombreCorreo+"@email.com", false, "", wedding1, null);
+            invitationRepository.save(invitation);
         }
     }
 
     @Test
     @Order(7)
-    void crearRegalos() {
+    void crearGifts() {
 
-        String[] listaRegalos = {
+        String[] listaGifts = {
                 "Viaje", "Lavadora", "Carrito bebe", "Television", "Bicicleta",
                 "Suscripcion Netflix", "Cesta productos artesanos", "Juego de sábanas",
                 "Robot de cocina", "Freidora de aire", "Altavoz bluetooth", "Juegos de cuchillos",
@@ -149,18 +148,18 @@ class ApiRestApplicationTests {
                 "Set de copas de cóctel", "Caja de chocolates"
         };
 
-        for (String nombreRegalo : listaRegalos) {
-            Regalo regalo = new Regalo(0, nombreRegalo, false, boda1);
-            regaloRepository.save(regalo);
+        for (String nombreRegalo : listaGifts) {
+            Gift regalo = new Gift(0, nombreRegalo, false, wedding1);
+            giftRepository.save(regalo);
         }
 
     }
 
     @Test
     @Order(8)
-    void crearTareas() {
-        Tarea tare1 = new Tarea(0, "Disenar invitaciones", LocalDate.of(2024, 10, 15), false, boda1);
-        tareaRepository.save(tare1);
+    void crearTasks() {
+        Task tare1 = new Task(0, "Disenar invitations", LocalDate.of(2024, 10, 15), false, wedding1);
+        taskRepository.save(tare1);
     }
 
     @Test
@@ -187,17 +186,17 @@ class ApiRestApplicationTests {
     @Order(99)
     void asociaciones() {
         // AÑADE MENUS A BODAS:
-        //user.getBodas().add(boda1);
-        System.out.println("Bodas del user 1: ");
-        user.getBodas().forEach(System.out::println);
-        System.out.println("Menus de la boda: ");
-        boda1.getMenus().forEach(System.out::println);
-        System.out.println("Tareas boda: ");
-        boda1.getTareas().forEach(System.out::println);
-        System.out.println("Regalos boda: ");
-        boda1.getRegalos().forEach(System.out::println);
-        System.out.println("Invitaciones boda: ");
-        boda1.getInvitaciones().forEach(System.out::println);
+        //user.getWeddings().add(wedding1);
+        System.out.println("Weddings del user 1: ");
+        user.getWeddings().forEach(System.out::println);
+        System.out.println("Menus de la wedding: ");
+        wedding1.getMenus().forEach(System.out::println);
+        System.out.println("Tasks wedding: ");
+        wedding1.getTasks().forEach(System.out::println);
+        System.out.println("Gifts wedding: ");
+        wedding1.getGifts().forEach(System.out::println);
+        System.out.println("Invitations wedding: ");
+        wedding1.getInvitations().forEach(System.out::println);
     }
 
 

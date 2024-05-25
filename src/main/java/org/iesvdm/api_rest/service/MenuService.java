@@ -1,10 +1,9 @@
 package org.iesvdm.api_rest.service;
 
-import org.iesvdm.api_rest.domain.Boda;
 import org.iesvdm.api_rest.domain.Menu;
 import org.iesvdm.api_rest.exception.EntityNotFoundException;
 import org.iesvdm.api_rest.exception.NotCouplingIdException;
-import org.iesvdm.api_rest.repository.BodaRepository;
+import org.iesvdm.api_rest.repository.WeddingRepository;
 import org.iesvdm.api_rest.repository.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ import java.util.*;
 public class MenuService {
 
     @Autowired
-    BodaRepository bodaRepository; //¿NECESARIO?
+    WeddingRepository weddingRepository; //¿NECESARIO?
     @Autowired
     MenuRepository menuRepository;
 
@@ -27,7 +26,7 @@ public class MenuService {
         List<Menu> resultado = new ArrayList<>();
 
         if(wordOptional.isPresent()) {
-            resultado = menuRepository.findMenusByNombreContainingIgnoreCaseOrPrimeroContainingIgnoreCaseOrSegundoContainingIgnoreCaseOrPostreContainingIgnoreCase(wordOptional.get(), wordOptional.get(), wordOptional.get(), wordOptional.get());
+            resultado = menuRepository.findMenusByNameContainingIgnoreCaseOrStarterContainingIgnoreCaseOrMainCourseContainingIgnoreCaseOrDessertContainingIgnoreCase(wordOptional.get(), wordOptional.get(), wordOptional.get(), wordOptional.get());
         }
         return resultado;
     }
