@@ -152,14 +152,45 @@ class ApiRestApplicationTests {
             Gift regalo = new Gift(0, nombreRegalo, false, wedding1);
             giftRepository.save(regalo);
         }
-
     }
 
     @Test
     @Order(8)
     void crearTasks() {
-        Task tare1 = new Task(0, "Disenar invitations", LocalDate.of(2024, 10, 15), false, wedding1);
-        taskRepository.save(tare1);
+        Task tarea1 = new Task(0, "Definir la lista de invitados", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea2 = new Task(0, "Reservar la ceremonia y el lugar de la recepción", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea3 = new Task(0, "Fijar un presupuesto", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea4 = new Task(0, "Infórmarse sobre los trámites necesarios", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea5 = new Task(0, "Seleccionar padrinos y damas de honor", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea6 = new Task(0, "Elegir los anillos de matrimonio", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea7 = new Task(0, "Centros de mesa", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea8 = new Task(0, "elegir catering", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea9 = new Task(0, "Contratar fotógrafo", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea10 = new Task(0, "Contratar dj", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea11 = new Task(0, "Ramo y flores de decoración", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea12 = new Task(0, "Planificar transporte", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea13 = new Task(0, "Diseñar invitaciones", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea14 = new Task(0, "Traje novio", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea15 = new Task(0, "Vestido novia", LocalDate.of(2024, 10, 15), false, wedding1);
+        Task tarea16 = new Task(0, "Peluquería", LocalDate.of(2024, 10, 15), false, wedding1);
+
+        taskRepository.save(tarea1);
+        taskRepository.save(tarea2);
+        taskRepository.save(tarea3);
+        taskRepository.save(tarea4);
+        taskRepository.save(tarea5);
+        taskRepository.save(tarea6);
+        taskRepository.save(tarea7);
+        taskRepository.save(tarea7);
+        taskRepository.save(tarea8);
+        taskRepository.save(tarea9);
+        taskRepository.save(tarea10);
+        taskRepository.save(tarea11);
+        taskRepository.save(tarea12);
+        taskRepository.save(tarea13);
+        taskRepository.save(tarea14);
+        taskRepository.save(tarea15);
+        taskRepository.save(tarea16);
     }
 
     @Test
@@ -198,6 +229,5 @@ class ApiRestApplicationTests {
         System.out.println("Invitations wedding: ");
         wedding1.getInvitations().forEach(System.out::println);
     }
-
 
 }

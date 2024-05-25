@@ -5,12 +5,14 @@ import org.iesvdm.api_rest.domain.Task;
 import org.iesvdm.api_rest.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
-@CrossOrigin(origins = {"http://localhost:4200"})
+@CrossOrigin(origins = {"*"})
 @RestController
 @RequestMapping("/v1/api/tasks")
 public class TaskController {
@@ -21,6 +23,29 @@ public class TaskController {
     @GetMapping(value = {"", "/"})
     public List<Task> all() {
         return taskService.all();
+    }
+
+    @GetMapping(value = {"","/"}, params = {"page", "size", "!filter"})
+    public ResponseEntity<Map<String, Object>> all(
+            @RequestParam(value = "page", defaultValue = "0") int page
+            , @RequestParam(value = "size", defaultValue = "3") int size){
+        log.info("Accessing paginated Tasks");
+        log.info("PAGE: {} & SIZE: {}", page, size);
+
+        Map<String, Object> responseAll = this.taskService.all(page, size);
+        return ResponseEntity.ok(responseAll);
+    }
+
+    @GetMapping(value = { "", "/" }, params = { "page", "size","filter"})
+    public ResponseEntity<Map<String, Object>> all(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "3") int size,
+            @RequestParam String filter) {
+        log.info("Accessing paginated and filtered Tasks");
+        log.info("PAGE: " + page + " & SIZE: " + size + " & Filtered by: " + filter);
+
+        Map<String, Object> responseAll = this.taskService.findByFilter(page, size, filter);
+        return ResponseEntity.ok(responseAll);
     }
 
     @PostMapping({"","/"})

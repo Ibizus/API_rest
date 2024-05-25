@@ -4,7 +4,12 @@ import org.iesvdm.api_rest.domain.Task;
 import org.iesvdm.api_rest.exception.EntityNotFoundException;
 import org.iesvdm.api_rest.exception.NotCouplingIdException;
 import org.iesvdm.api_rest.repository.TaskRepository;
+import org.iesvdm.api_rest.util.PaginationTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,6 +21,23 @@ public class TaskService {
     TaskRepository taskRepository;
 
     public List<Task> all(){return this.taskRepository.findAll();}
+
+    // Pagination of All data:
+    public Map<String, Object> all(int page, int size){
+        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<Task> pageAll = this.taskRepository.findAll(paginator);
+
+        return PaginationTool.createPaginatedResponseMap(pageAll, "tasks");
+    }
+
+    // Find by filter and return paginated:
+    public Map<String, Object> findByFilter(int page, int size, String filter){
+        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<Task> pageFiltered = this.taskRepository
+                .findTaskByDescriptionContainingIgnoreCase(filter, paginator);
+
+        return PaginationTool.createPaginatedResponseMap(pageFiltered, "tasks");
+    }
 
     public Task save(Task task){
         return this.taskRepository.save(task);
