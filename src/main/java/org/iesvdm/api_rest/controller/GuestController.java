@@ -29,7 +29,7 @@ public class GuestController {
     public ResponseEntity<Map<String, Object>> all(
             @RequestParam(value = "page", defaultValue = "0") int page
             , @RequestParam(value = "size", defaultValue = "3") int size){
-        log.info("Accessing paginated Gifts");
+        log.info("Accessing paginated Guests");
         log.info("PAGE: {} & SIZE: {}", page, size);
 
         Map<String, Object> responseAll = this.guestService.all(page, size);
@@ -41,7 +41,7 @@ public class GuestController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "3") int size,
             @RequestParam String filter) {
-        log.info("Accessing paginated and filtered Gifts");
+        log.info("Accessing paginated and filtered Guests");
         log.info("PAGE: " + page + " & SIZE: " + size + " & Filtered by: " + filter);
 
         Map<String, Object> responseAll = this.guestService.findByFilter(page, size, filter);
@@ -55,13 +55,13 @@ public class GuestController {
 
     @PostMapping({"","/"})
     public Guest newGuest(@RequestBody Guest guest) {
-        log.info("Creando un guest = " + guest);
+        log.info("creating a guest = " + guest);
         return this.guestService.save(guest);
     }
 
     @PutMapping("/{id}")
     public Guest replaceGuest(@PathVariable("id") Long id, @RequestBody Guest guest) {
-        log.info("Actualizar guest con id = " + id + "\n guest = " + guest);
+        log.info("Updating guest with id = " + id + "\n guest = " + guest);
         return this.guestService.replace(id, guest);
     }
 

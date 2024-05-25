@@ -30,7 +30,7 @@ public class InvitationController {
     public ResponseEntity<Map<String, Object>> all(
             @RequestParam(value = "page", defaultValue = "0") int page
             , @RequestParam(value = "size", defaultValue = "3") int size){
-        log.info("Accessing paginated Gifts");
+        log.info("Accessing paginated Invitations");
         log.info("PAGE: {} & SIZE: {}", page, size);
 
         Map<String, Object> responseAll = this.invitationService.all(page, size);
@@ -42,7 +42,7 @@ public class InvitationController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "3") int size,
             @RequestParam String filter) {
-        log.info("Accessing paginated and filtered Gifts");
+        log.info("Accessing paginated and filtered Invitations");
         log.info("PAGE: " + page + " & SIZE: " + size + " & Filtered by: " + filter);
 
         Map<String, Object> responseAll = this.invitationService.findByFilter(page, size, filter);
@@ -62,7 +62,7 @@ public class InvitationController {
 
     @PutMapping("/{id}")
     public Invitation replaceInvitation(@PathVariable("id") Long id, @RequestBody Invitation invitation) {
-        log.info("Actualizar invitation con id = " + id + "\n invitation = " + invitation);
+        log.info("Updating invitation con id = " + id + "\n invitation = " + invitation);
         return this.invitationService.replace(id, invitation);
     }
 

@@ -25,7 +25,7 @@ public class EventController {
 
     @PostMapping({"","/"})
     public Event newEvent(@RequestBody Event event) {
-        log.info("Creando un event = " + event);
+        log.info("Creating an event = " + event);
         return this.eventService.save(event);
     }
 
@@ -36,7 +36,7 @@ public class EventController {
 
     @PutMapping("/{id}")
     public Event replaceEvent(@PathVariable("id") Long id, @RequestBody Event event) {
-        log.info("Actualizar event con id = " + id + "\n event = " + event);
+        log.info("updating event with id = " + id + "\n event = " + event);
         return this.eventService.replace(id, event);
     }
 
