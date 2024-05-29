@@ -26,6 +26,8 @@ class ApiRestApplicationTests {
     InvitationRepository invitationRepository;
     @Autowired
     GiftRepository giftRepository;
+    @Autowired
+    FAQRepository faqRepository;
 
     User admin;
     User user;
@@ -43,19 +45,19 @@ class ApiRestApplicationTests {
     private TaskRepository taskRepository;
 
 
-    @BeforeEach
-    void inicializa(){
-        user = userRepository.findById(1L).orElse(null);
-        wedding1 = weddingRepository.findById(1L).orElse(null);
-    }
+//    @BeforeEach
+//    void inicializa(){
+////        user = userRepository.findById(1L).orElse(null);
+////        wedding1 = weddingRepository.findById(1L).orElse(null);
+//    }
+
+//    @Test
+//    @Order(1)
+//    void contextLoads() {
+//    }
 
     @Test
     @Order(1)
-    void contextLoads() {
-    }
-
-    @Test
-    @Order(2)
     void crearUsers(){
         admin = new User(0, "Hector", "Lopez", "Diaz", "calle Veleta 2", "", "29651", "Mijas", "Malaga", "hlopdia699@g.educaand.es","665661519", new HashSet<>());
         user = new User(0, "Alvaro", "Moreno", "Barreiro", "calle de la Luz 25", "", "29640", "Fuengirola", "Malaga", "alvaro@educaand.es","666666666", new HashSet<>());
@@ -64,8 +66,21 @@ class ApiRestApplicationTests {
     }
 
     @Test
+    @Order(2)
+    void crearWeddings() {
+        user = userRepository.findById(1L).orElse(null);
+
+        wedding1 = new Wedding(0, "Mi Wedding", LocalDate.now(), LocalTime.now(), "Alvaro", "Loli", "Finca Las Yeguas", "", "29600", "Yecla", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
+        wedding2 = new Wedding(0, "Wedding Cuñis", LocalDate.now(), LocalTime.now(), "Paco", "Caro", "Finca El Agua", "", "29720", "Marbella", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
+        weddingRepository.save(wedding1);
+        weddingRepository.save(wedding2);
+    }
+
+    @Test
     @Order(3)
     void crearEvents() {
+        wedding1 = weddingRepository.findById(1L).orElse(null);
+
         ceremonia = new Event(0, "Iglesia Niño Jesús", "Celebración del matrimonio", LocalTime.of(18, 0), wedding1);
         cocktail = new Event(0, "Jardín Finca Las Yeguas", "Bienvenida a la finca", LocalTime.of(19, 30), wedding1);
         banquete = new Event(0, "Salón interior", "Banquete de weddings", LocalTime.of(21, 0), wedding1);
@@ -79,6 +94,8 @@ class ApiRestApplicationTests {
     @Test
     @Order(4)
     void crearMenus() {
+        wedding1 = weddingRepository.findById(1L).orElse(null);
+
         menuInfantil = new Menu(0, "Infantil", "Macarrones con queso", "Salchichas", "Yogur", wedding1);
         menuVegano = new Menu(0, "Vegano", "Ensalada", "Lasaña vegana", "Pastel de manzana vegano", wedding1);
         menuCarne = new Menu(0, "Carne", "Crema de Remolacha", "Solomillo", "Coulant", wedding1);
@@ -89,19 +106,12 @@ class ApiRestApplicationTests {
         menuRepository.save(menuPescado);
     }
 
+
+
     @Test
     @Order(5)
-    void crearWeddings() {
-
-        wedding1 = new Wedding(0, "Mi Wedding", LocalDate.now(), LocalTime.now(), "Alvaro", "Loli", "Finca Las Yeguas", "", "29600", "Yecla", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
-        wedding2 = new Wedding(0, "Wedding Cuñis", LocalDate.now(), LocalTime.now(), "Paco", "Caro", "Finca El Agua", "", "29720", "Marbella", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
-        weddingRepository.save(wedding1);
-        weddingRepository.save(wedding2);
-    }
-
-    @Test
-    @Order(6)
     void crearInvitations() {
+        wedding1 = weddingRepository.findById(1L).orElse(null);
 
         String[] listaInvitations = {
                 "Francisco", "Antonio", "José", "Manuel", "María", "Ana", "Carmen", "Elena", "Isabel",
@@ -127,8 +137,9 @@ class ApiRestApplicationTests {
     }
 
     @Test
-    @Order(7)
+    @Order(6)
     void crearGifts() {
+        wedding1 = weddingRepository.findById(1L).orElse(null);
 
         String[] listaGifts = {
                 "Viaje", "Lavadora", "Carrito bebe", "Television", "Bicicleta",
@@ -155,8 +166,10 @@ class ApiRestApplicationTests {
     }
 
     @Test
-    @Order(8)
+    @Order(7)
     void crearTasks() {
+        wedding1 = weddingRepository.findById(1L).orElse(null);
+
         Task tarea1 = new Task(0, "Definir la lista de invitados", LocalDate.of(2024, 10, 15), false, wedding1);
         Task tarea2 = new Task(0, "Reservar la ceremonia y el lugar de la recepción", LocalDate.of(2024, 10, 15), false, wedding1);
         Task tarea3 = new Task(0, "Fijar un presupuesto", LocalDate.of(2024, 10, 15), false, wedding1);
@@ -194,7 +207,7 @@ class ApiRestApplicationTests {
     }
 
     @Test
-    @Order(9)
+    @Order(8)
     void crearInvitados() {
 
         String[] listaApellidoss = {
@@ -214,20 +227,54 @@ class ApiRestApplicationTests {
     }
 
     @Test
+    @Order(9)
+    void crearFaqs(){
+        FAQ faq1 = new FAQ(0,
+                "¿Cómo funciona la gestión de invitados?",
+                "Nuestro servicio de gestión de invitados te permite agregar, editar y organizar la lista de invitados de manera sencilla. Puedes enviar invitaciones digitales, realizar un seguimiento de las confirmaciones de asistencia (RSVP), y asignar asientos para la ceremonia y la recepción. Todo esto desde una interfaz intuitiva y fácil de usar.",
+                false);
+        FAQ faq2 = new FAQ(0,
+                "¿Puedo personalizar el diseño de mi página de boda?",
+                "Sí, ofrecemos varias plantillas de diseño que puedes personalizar para que coincidan con el estilo y el tema de tu boda. Puedes agregar tus fotos, cambiar colores y fuentes, y añadir secciones adicionales según tus necesidades. Queremos que tu página de boda sea única y refleje tu personalidad.",
+                false);
+        FAQ faq3 = new FAQ(0,
+                "¿Es seguro utilizar su plataforma?",
+                "La seguridad de tus datos es nuestra máxima prioridad. Utilizamos cifrado SSL para proteger toda la información que se transmite a través de nuestra plataforma. Además, tenemos políticas estrictas de privacidad para garantizar que tus datos personales y los de tus invitados estén protegidos en todo momento.",
+                false);
+        FAQ faq4 = new FAQ(0,
+                "¿Puedo realizar cambios en la lista de invitados una vez enviada la invitación?",
+                "Sí, puedes realizar cambios en la lista de invitados y en la organización de tu boda en cualquier momento. Nuestra plataforma está diseñada para ser flexible y adaptable a tus necesidades. Los cambios se actualizan automáticamente, y tus invitados recibirán notificaciones de cualquier modificación importante, asegurando que todos estén al tanto.",
+                false);
+        FAQ faq5 = new FAQ(0,
+                "¿Puedo integrar mi cuenta con redes sociales?",
+                "Sí, ofrecemos integración con varias redes sociales para facilitar la comunicación y la compartición de información sobre tu boda. Puedes sincronizar tu cuenta con plataformas como Facebook, Instagram y Twitter, permitiendo que tus invitados compartan fotos y momentos especiales usando hashtags personalizados. Esto también ayuda a mantener a todos informados y entusiasmados con los detalles de tu gran día.",
+                false);
+        FAQ faq6 = new FAQ(0,
+                "¿Ofrecen soporte técnico?",
+                "Sí, ofrecemos soporte técnico para ayudarte en cualquier etapa de tu planificación. Nuestro equipo de soporte está disponible por correo electrónico, chat en vivo y teléfono para resolver cualquier problema o responder a cualquier pregunta que puedas tener. Queremos asegurarnos de que tu experiencia sea lo más fluida y agradable posible.",
+                false);
+        faqRepository.save(faq1);
+        faqRepository.save(faq2);
+        faqRepository.save(faq3);
+        faqRepository.save(faq4);
+        faqRepository.save(faq5);
+        faqRepository.save(faq6);
+    }
+
+    @Test
     @Order(99)
     void asociaciones() {
-        // AÑADE MENUS A BODAS:
-        //user.getWeddings().add(wedding1);
-        System.out.println("Weddings del user 1: ");
-        user.getWeddings().forEach(System.out::println);
-        System.out.println("Menus de la wedding: ");
-        wedding1.getMenus().forEach(System.out::println);
-        System.out.println("Tasks wedding: ");
-        wedding1.getTasks().forEach(System.out::println);
-        System.out.println("Gifts wedding: ");
-        wedding1.getGifts().forEach(System.out::println);
-        System.out.println("Invitations wedding: ");
-        wedding1.getInvitations().forEach(System.out::println);
+
+//        System.out.println("Weddings del user 1: ");
+//        user.getWeddings().forEach(System.out::println);
+//        System.out.println("Menus de la wedding: ");
+//        wedding1.getMenus().forEach(System.out::println);
+//        System.out.println("Tasks wedding: ");
+//        wedding1.getTasks().forEach(System.out::println);
+//        System.out.println("Gifts wedding: ");
+//        wedding1.getGifts().forEach(System.out::println);
+//        System.out.println("Invitations wedding: ");
+//        wedding1.getInvitations().forEach(System.out::println);
     }
 
 }
