@@ -38,9 +38,9 @@ public class MailSenderService {
 
     @Autowired
     private SpringTemplateEngine thymeleafTemplateEngine;
-    @Autowired
-    private JavaMailSender mailSender;
 
+    private JavaMailSender mailSender;
+    @Autowired
     public MailSenderService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
