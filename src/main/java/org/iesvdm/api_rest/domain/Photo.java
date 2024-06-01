@@ -1,5 +1,6 @@
 package org.iesvdm.api_rest.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,6 +10,8 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@Table(name = "photo",
+        indexes = @Index(name = "photo_name_index", columnList = "name"))
 public class Photo {
 
     @Id
@@ -18,6 +21,7 @@ public class Photo {
 
     private String name;
 
+    @JsonBackReference
     @JsonIgnore
     @ToString.Exclude
     @ManyToOne

@@ -8,6 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@Table(name = "faq",
+        indexes = @Index(name = "faq_title_index", columnList = "title"))
 public class FAQ {
 
     @Id
