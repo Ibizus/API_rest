@@ -1,5 +1,6 @@
 package org.iesvdm.api_rest.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,6 +12,8 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@Table(name = "event",
+        indexes = @Index(name = "event_description_index", columnList = "description"))
 public class Event {
 
     @Id
@@ -22,6 +25,7 @@ public class Event {
     private String description;
     private LocalTime time;
 
+    @JsonBackReference
     @JsonIgnore
     @ToString.Exclude
     @ManyToOne

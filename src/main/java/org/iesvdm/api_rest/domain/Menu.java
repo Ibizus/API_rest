@@ -1,5 +1,6 @@
 package org.iesvdm.api_rest.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,6 +10,8 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@Table(name = "menu",
+        indexes = @Index(name = "menu_name_index", columnList = "name"))
 public class Menu {
 
     @Id
@@ -21,6 +24,7 @@ public class Menu {
     private String mainCourse;
     private String dessert;
 
+    @JsonBackReference
     @JsonIgnore
     @ToString.Exclude
     @ManyToOne
