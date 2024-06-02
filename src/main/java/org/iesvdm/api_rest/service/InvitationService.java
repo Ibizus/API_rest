@@ -39,6 +39,16 @@ public class InvitationService {
         return PaginationTool.createPaginatedResponseMap(pageFiltered, "invitations");
     }
 
+    // Fetch the user's email (Wedding owner) based on the invitation ID:
+    public String getUserEmailByInvitationId(Long invitationId) {
+        Optional<String> userEmail = invitationRepository.findUserEmailByInvitationId(invitationId);
+        String output = "";
+        if(userEmail.isPresent()){
+            output = userEmail.get();
+        }
+        return output;
+    }
+
     public Invitation save(Invitation invitation){
         return this.invitationRepository.save(invitation);
     }

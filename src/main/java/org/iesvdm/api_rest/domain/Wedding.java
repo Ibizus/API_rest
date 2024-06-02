@@ -1,6 +1,6 @@
 package org.iesvdm.api_rest.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,6 +14,8 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@Table(name = "wedding",
+        indexes = @Index(name = "wedding_name_index", columnList = "name"))
 public class Wedding {
 
     @Id
@@ -32,28 +34,33 @@ public class Wedding {
     private String city;
     private String region;
 
-    @OneToMany(mappedBy = "wedding", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY)
     private Set<Event> events = new HashSet<>();
 
-    @OneToMany(mappedBy = "wedding", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY)
     private Set<Task> tasks = new HashSet<>();
 
-    @OneToMany(mappedBy = "wedding", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY)
     private Set<Menu> menus = new HashSet<>();
 
-    @OneToMany(mappedBy = "wedding", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY)
     private Set<Invitation> invitations = new HashSet<>();
 
-    @OneToMany(mappedBy = "wedding", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY)
     private Set<Gift> gifts = new HashSet<>();
 
-    @OneToMany(mappedBy = "wedding", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY)
     private Set<Photo> gallery = new HashSet<>();
 
+    @JsonBackReference
     @ToString.Exclude
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 }
-
-// Thank you very much!! You are great, now this is another entity:

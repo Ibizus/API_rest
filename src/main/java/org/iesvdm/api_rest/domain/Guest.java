@@ -1,5 +1,6 @@
 package org.iesvdm.api_rest.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,6 +10,8 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@Table(name = "guest",
+        indexes = @Index(name = "guest_name_index", columnList = "name"))
 public class Guest {
 
     @Id
@@ -24,7 +27,8 @@ public class Guest {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToOne
+    @JsonBackReference
+    @OneToOne(mappedBy = "guest", cascade = CascadeType.PERSIST)
     @JoinColumn(name = "invitation_id")
     private Invitation invitation;
 }

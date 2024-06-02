@@ -1,5 +1,6 @@
 package org.iesvdm.api_rest.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +13,8 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@Table(name = "user",
+        indexes = @Index(name = "user_name_index", columnList = "name"))
 public class User {
 
     @Id
@@ -30,6 +33,7 @@ public class User {
     private String email;
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Wedding> weddings = new HashSet<>();
 }
