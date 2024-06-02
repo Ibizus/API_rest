@@ -9,6 +9,9 @@ import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -59,7 +62,7 @@ class ApiRestApplicationTests {
     @Test
     @Order(1)
     void crearUsers(){
-        admin = new User(0, "Hector", "Lopez", "Diaz", "calle Veleta 2", "", "29651", "Mijas", "Malaga", "hlopdia699@g.educaand.es","665661519", new HashSet<>());
+        admin = new User(0, "Hector", "Lopez", "Diaz", "calle Veleta 2", "", "29651", "Mijas", "Malaga", "hector.ldz@gmail.com","665661519", new HashSet<>());
         user = new User(0, "Alvaro", "Moreno", "Barreiro", "calle de la Luz 25", "", "29640", "Fuengirola", "Malaga", "alvaro@educaand.es","666666666", new HashSet<>());
         userRepository.save(admin);
         userRepository.save(user);
@@ -259,6 +262,15 @@ class ApiRestApplicationTests {
         faqRepository.save(faq4);
         faqRepository.save(faq5);
         faqRepository.save(faq6);
+    }
+
+    @Test
+    @Order(10)
+    void testGetUserEmailByInvitationId() { // Test to try JPQL query:
+        Long invitationId = 1L;
+        Optional<String> userEmail = invitationRepository.findUserEmailByInvitationId(invitationId);
+        assertThat(userEmail).isPresent();
+        assertThat(userEmail.get()).isEqualTo("hector.ldz@gmail.com");
     }
 
     @Test

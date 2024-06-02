@@ -2,6 +2,7 @@ package org.iesvdm.api_rest.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.iesvdm.api_rest.domain.Invitation;
 import org.iesvdm.api_rest.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +39,8 @@ public class MailSenderService {
 
     @Autowired
     private SpringTemplateEngine thymeleafTemplateEngine;
-
+    @Autowired
+    private InvitationService invitationService;
     private JavaMailSender mailSender;
     @Autowired
     public MailSenderService(JavaMailSender mailSender) {
@@ -88,12 +90,14 @@ public class MailSenderService {
         mailSender.send(message);
     }
 
+    // Receives Invitation's Id and sends email notification to guest:
     @Async
-    public void sendInvitation(Long id) {
+    public void sendInvitation(Long invitationId) {
+
+        Invitation targetInvitation =  invitationService.one(invitationId);
 
         Map<String, Object> templateModel = new HashMap<>();
-
-//        templateModel.put("body", strin);
+//        templateModel.put("body", string);
 
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
@@ -110,8 +114,8 @@ public class MailSenderService {
 
         try {
             this.sendWithAttach(emailSenderUser,
-                    "to",
-                    "subject",
+                    targetInvitation.getEmail(),
+                    "Hola " + targetInvitation.getName() + ", tienes una invitación",
                     htmlBody,
                     "banner.png", new ByteArrayResource(qrArr), "image/png",
                     "fileName", new ByteArrayResource(qrArr2)
@@ -121,15 +125,17 @@ public class MailSenderService {
         }
     }
 
+    // Receives new user registered and gives back email confirmation:
     @Async
     public void sendConfirmation(User user) {
 
         Map<String, Object> templateModel = new HashMap<>();
+
+
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
         String htmlBody = thymeleafTemplateEngine.process("registration.html", thymeleafContext);
         byte[] qrArr = new byte[0];
-        byte[] qrArr2 = new byte[0];
 
         try {
             qrArr = Files.readAllBytes(Paths.get(ATTACH_PATH+IMAGES_DIR+BANNER_IMG));
@@ -139,8 +145,8 @@ public class MailSenderService {
 
         try {
             this.sendWithInline(emailSenderUser,
-                    "to",
-                    "subject",
+                    user.getEmail(),
+                    "Hi " + user.getName() + ", welcome to Guestify",
                     htmlBody,
                     "banner.png", new ByteArrayResource(qrArr), "image/png"
             );
@@ -149,15 +155,20 @@ public class MailSenderService {
         }
     }
 
+    // Receives accepted invitation's id
     @Async
-    public void sendNotification(Long id) {
+    public void sendNotification(Long invitationId) {
+
+        Invitation targetInvitation =  invitationService.one(invitationId);
+        String customerEmail = invitationService.getUserEmailByInvitationId(invitationId);
 
         Map<String, Object> templateModel = new HashMap<>();
+
+
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
         String htmlBody = thymeleafTemplateEngine.process("notification.html", thymeleafContext);
         byte[] qrArr = new byte[0];
-        byte[] qrArr2 = new byte[0];
 
         try {
             qrArr = Files.readAllBytes(Paths.get(ATTACH_PATH+IMAGES_DIR+BANNER_IMG));
@@ -167,8 +178,8 @@ public class MailSenderService {
 
         try {
             this.sendWithInline(emailSenderUser,
-                    "to",
-                    "subject",
+                    customerEmail,
+                    targetInvitation.getName() + "'s invitation accepted!",
                     htmlBody,
                     "banner.png", new ByteArrayResource(qrArr), "image/png"
             );
