@@ -52,13 +52,15 @@
 
 <main class="container">
     <section class="message">
-        <p th:text="${#messages.msg('greeting', candidate)}">Dear [Recipient's Name],</p>
+        <p th:text="${#messages.msg('shared.greeting', name)}">Hi [User's Name],</p>
         <br>
-        <p th:utext="${#messages.msg('intro', office)}">Introduction</p>
-
-        <li th:text="${#messages.msg('spp')}">SPP & PPP</li>
-        <li th:text="${#messages.msg('flex', yearlyFlex)}">Flex</li>
-
+        <p th:utext="${#messages.msg('invitation.intro')}">Intro</p>
+        <br>
+        <p th:utext="${#messages.msg('invitation.body')}">Body</p>
+        <br>
+        <p th:text="${#messages.msg('invitation.end')}">Farewell</p>
+        <br>
+        <p th:text="${#messages.msg('invitation.goodbye', names)}">Bye</p>
     </section>
 </main>
 </body>

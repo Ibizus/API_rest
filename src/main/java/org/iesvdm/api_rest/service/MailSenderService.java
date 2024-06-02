@@ -97,7 +97,8 @@ public class MailSenderService {
         Invitation targetInvitation =  invitationService.one(invitationId);
 
         Map<String, Object> templateModel = new HashMap<>();
-//        templateModel.put("body", string);
+        templateModel.put("name", targetInvitation.getName());
+        templateModel.put("names", targetInvitation.getWedding().getPartner1Name() + " & " + targetInvitation.getWedding().getPartner2Name());
 
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
@@ -130,7 +131,7 @@ public class MailSenderService {
     public void sendConfirmation(User user) {
 
         Map<String, Object> templateModel = new HashMap<>();
-
+        templateModel.put("name", user.getName());
 
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
@@ -163,7 +164,8 @@ public class MailSenderService {
         String customerEmail = invitationService.getUserEmailByInvitationId(invitationId);
 
         Map<String, Object> templateModel = new HashMap<>();
-
+        templateModel.put("name", targetInvitation.getWedding().getUser().getName());
+        templateModel.put("guestName", targetInvitation.getName());
 
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
