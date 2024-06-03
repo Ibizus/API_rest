@@ -131,7 +131,7 @@ public class MailSenderService {
     public void sendConfirmation(User user) {
 
         Map<String, Object> templateModel = new HashMap<>();
-        templateModel.put("name", user.getName());
+        templateModel.put("name", user.getUsername());
 
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
@@ -147,7 +147,7 @@ public class MailSenderService {
         try {
             this.sendWithInline(emailSenderUser,
                     user.getEmail(),
-                    "Hi " + user.getName() + ", welcome to Guestify",
+                    "Hi " + user.getUsername() + ", welcome to Guestify",
                     htmlBody,
                     "banner.png", new ByteArrayResource(qrArr), "image/png"
             );
@@ -164,7 +164,7 @@ public class MailSenderService {
         String customerEmail = invitationService.getUserEmailByInvitationId(invitationId);
 
         Map<String, Object> templateModel = new HashMap<>();
-        templateModel.put("name", targetInvitation.getWedding().getUser().getName());
+        templateModel.put("name", targetInvitation.getWedding().getUser().getUsername());
         templateModel.put("guestName", targetInvitation.getName());
 
         Context thymeleafContext = new Context();

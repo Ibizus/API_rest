@@ -24,7 +24,7 @@ public class UserService {
 
     public Page<User> findByName(String filter){
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "name"));
-        return this.userRepository.findUsersByNameContainingIgnoreCase(filter, pageable);
+        return this.userRepository.findUsersByUsernameContainingIgnoreCase(filter, pageable);
     }
 
     public Page<User> findByLastname(String filter){

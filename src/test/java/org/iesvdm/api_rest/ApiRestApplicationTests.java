@@ -62,8 +62,8 @@ class ApiRestApplicationTests {
     @Test
     @Order(1)
     void crearUsers(){
-        admin = new User(0, "Hector", "Lopez", "Diaz", "calle Veleta 2", "", "29651", "Mijas", "Malaga", "hector.ldz@gmail.com","665661519", new HashSet<>());
-        user = new User(0, "Alvaro", "Moreno", "Barreiro", "calle de la Luz 25", "", "29640", "Fuengirola", "Malaga", "alvaro@educaand.es","666666666", new HashSet<>());
+        admin = new User(0L, "Hector", "Lopez", "Diaz", "calle Veleta 2", "", "29651", "Mijas", "Malaga", "665661519", "hector.ldz@gmail.com", "123456", new HashSet<>(), new HashSet<>());
+        user = new User(0L, "Alvaro", "Moreno", "Barreiro", "calle de la Luz 25", "", "29640", "Fuengirola", "Malaga", "666666666", "alvaro@educaand.es", "123456", new HashSet<>(), new HashSet<>());
         userRepository.save(admin);
         userRepository.save(user);
     }
