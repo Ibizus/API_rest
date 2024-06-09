@@ -65,7 +65,7 @@ public class WebSecurityConfig {
                     authorizationManagerRequestMatcherRegistry
                             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                             .requestMatchers("v1/api/**").permitAll()
-                            .requestMatchers("v1/api/auth/**").permitAll()
+                            .requestMatchers("api/auth/**").permitAll()
                             .requestMatchers("api/prueba/solo-admin").hasAnyAuthority("ROL_ADMIN")
                             .anyRequest().authenticated();
                 } );

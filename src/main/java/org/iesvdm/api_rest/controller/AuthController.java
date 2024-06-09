@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -40,14 +41,14 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = tokenUtils.generateToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();
@@ -63,12 +64,12 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-        if (userRepository.existsByUsername(registerRequest.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username ya en uso!"));
-        }
+//        if (userRepository.existsByUsername(registerRequest.getUsername())) {
+//            return ResponseEntity.badRequest().body(new MessageResponse("Error: Nombre ya en uso!"));
+//        }
 
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email ya en uso!"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email ya registrado"));
         }
 
         // Create new user's account
@@ -104,7 +105,7 @@ public class AuthController {
         user.setRoles(roles);
         userRepository.save(user);
 
-        return ResponseEntity.ok(new MessageResponse("User registrado correctamente!"));
+        return ResponseEntity.ok(new MessageResponse("Usuario registrado correctamente!"));
     }
 
 }
