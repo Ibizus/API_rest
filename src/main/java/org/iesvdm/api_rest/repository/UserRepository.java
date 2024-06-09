@@ -15,11 +15,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     public Page<User> findUsersByLastName1ContainingIgnoreCaseOrLastName2ContainingIgnoreCase(String lastname1, String lastname2, Pageable pageable);
 
+    // Security configuration methods:
     Optional<User> findByUsername(String username);
-
     Optional<User> findByEmail(String username);
-
     Boolean existsByUsername(String username);
-
     Boolean existsByEmail(String email);
 }

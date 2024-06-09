@@ -15,7 +15,7 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "user",
-        indexes = @Index(name = "user_name_index", columnList = "name"))
+        indexes = @Index(name = "username_index", columnList = "username"))
 //uniqueConstraints = {
 //@UniqueConstraint(columnNames = "username"),
 //@UniqueConstraint(columnNames = "email")

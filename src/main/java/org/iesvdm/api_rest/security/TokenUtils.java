@@ -17,7 +17,6 @@ public class TokenUtils {
     private static final Logger logger = LoggerFactory.getLogger(TokenUtils.class);
 
     public String generateToken(Authentication authentication) {
-
         return encryptionUtil.encrypt(new Date().getTime()+"#"+authentication.getName());
     }
 

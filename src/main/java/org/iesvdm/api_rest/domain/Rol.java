@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "roles")
 public class Rol {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -18,5 +19,4 @@ public class Rol {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private ERol rol;
-
 }
