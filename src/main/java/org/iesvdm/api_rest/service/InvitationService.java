@@ -1,8 +1,10 @@
 package org.iesvdm.api_rest.service;
 
 import org.iesvdm.api_rest.domain.Invitation;
+import org.iesvdm.api_rest.dto.InvitationDTO;
 import org.iesvdm.api_rest.exception.EntityNotFoundException;
 import org.iesvdm.api_rest.exception.NotCouplingIdException;
+import org.iesvdm.api_rest.mapper.InvitationMapper;
 import org.iesvdm.api_rest.repository.InvitationRepository;
 import org.iesvdm.api_rest.util.PaginationTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ public class InvitationService {
 
     @Autowired
     InvitationRepository invitationRepository;
+
+    InvitationMapper invitationMapper;
 
     public List<Invitation> all(){return this.invitationRepository.findAll();}
 
@@ -55,6 +59,11 @@ public class InvitationService {
 
     public Invitation one(Long id){
         return this.invitationRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException(id, Invitation.class));
+    }
+
+    public InvitationDTO oneMapped(Long id){
+        return this.invitationRepository.findById(id).map(invitationMapper::mapToDto)
                 .orElseThrow(()-> new EntityNotFoundException(id, Invitation.class));
     }
 

@@ -17,6 +17,21 @@ public class  MailSenderController {
     @Autowired
     private MailSenderService mailSenderService;
 
+    /**
+     * Receives user id and sends an email confirmation to his/her email address
+     * @param id
+     */
+    @PostMapping(value = {"confirmation","confirmation/"}, params = {"id"})
+    public void sendConfirmation(@RequestParam Long id) {
+
+        this.mailSenderService.sendConfirmation(id);
+        log.info("Confirmation message processing in backend!");
+    }
+
+    /**
+     * Receives invitation id and sends an invitation email to guest`s email address
+     * @param id
+     */
     @PostMapping(value = {"invitation","invitation/"}, params = {"id"})
     public void sendInvitation(@RequestParam Long id) {
 
@@ -25,14 +40,11 @@ public class  MailSenderController {
         log.info("Invitation message processing in backend!");
     }
 
-    @PostMapping(value = {"confirmation","confirmation/"}, params = {"!id"})
-    public void sendConfirmation(@RequestBody User user) {
-
-        this.mailSenderService.sendConfirmation(user);
-        log.info("Confirmation message processing in backend!");
-    }
-
-    @PostMapping(value = {"accepted","accepted/"}, params = {"id"})
+    /**
+     * Receives invitation id and sends an email notification to the wedding owner
+     * @param id
+     */
+    @PostMapping(value = {"notification","notification/"}, params = {"id"})
     public void notifyAcceptation(@RequestParam Long id){
 
         log.info("Notification of accepted invitation being processed in backend!");

@@ -52,7 +52,6 @@ public class AuthController {
                 .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();
-
         response.put("token", token);
         response.put("id", userDetails.getId());
         response.put("username", userDetails.getUsername());
@@ -64,9 +63,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-//        if (userRepository.existsByUsername(registerRequest.getUsername())) {
-//            return ResponseEntity.badRequest().body(new MessageResponse("Error: Nombre ya en uso!"));
-//        }
 
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email ya registrado"));
@@ -105,7 +101,10 @@ public class AuthController {
         user.setRoles(roles);
         userRepository.save(user);
 
-        return ResponseEntity.ok(new MessageResponse("Usuario registrado correctamente!"));
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", user.getId());
+        return ResponseEntity.ok(response);
+        //return ResponseEntity.ok(new MessageResponse("Usuario registrado correctamente!"));
     }
 
 }

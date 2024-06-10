@@ -4,6 +4,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.iesvdm.api_rest.domain.Invitation;
 import org.iesvdm.api_rest.domain.User;
+import org.iesvdm.api_rest.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -23,6 +24,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class MailSenderService {
@@ -41,6 +43,8 @@ public class MailSenderService {
     private SpringTemplateEngine thymeleafTemplateEngine;
     @Autowired
     private InvitationService invitationService;
+    @Autowired
+    private UserService userService;
     private JavaMailSender mailSender;
     @Autowired
     public MailSenderService(JavaMailSender mailSender) {
@@ -103,7 +107,7 @@ public class MailSenderService {
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
         String htmlBody = thymeleafTemplateEngine.process("invitation.html", thymeleafContext);
-        byte[] qrArr = new byte[0];
+        byte[] qrArr;
         //byte[] qrArr2 = new byte[0];
 
         try {
@@ -128,31 +132,38 @@ public class MailSenderService {
 
     // Receives new user registered and gives back email confirmation:
     @Async
-    public void sendConfirmation(User user) {
-
-        Map<String, Object> templateModel = new HashMap<>();
-        templateModel.put("name", user.getUsername());
-
-        Context thymeleafContext = new Context();
-        thymeleafContext.setVariables(templateModel);
-        String htmlBody = thymeleafTemplateEngine.process("registration.html", thymeleafContext);
-        byte[] qrArr = new byte[0];
+    public void sendConfirmation(Long userId) {
 
         try {
-            qrArr = Files.readAllBytes(Paths.get(ATTACH_PATH+IMAGES_DIR+BANNER_IMG));
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading file to be attached: " + e);
-        }
+            User user = userService.one(userId);
 
-        try {
-            this.sendWithInline(emailSenderUser,
-                    user.getEmail(),
-                    "Hi " + user.getUsername() + ", welcome to Guestify",
-                    htmlBody,
-                    "banner.png", new ByteArrayResource(qrArr), "image/png"
-            );
-        } catch (MessagingException e) {
-            throw new RuntimeException("Error sending email: " + e);
+            Map<String, Object> templateModel = new HashMap<>();
+            templateModel.put("name", user.getUsername());
+
+            Context thymeleafContext = new Context();
+            thymeleafContext.setVariables(templateModel);
+            String htmlBody = thymeleafTemplateEngine.process("confirmation.html", thymeleafContext);
+            byte[] qrArr;
+
+            try {
+                qrArr = Files.readAllBytes(Paths.get(ATTACH_PATH+IMAGES_DIR+BANNER_IMG));
+            } catch (IOException e) {
+                throw new RuntimeException("Error reading file to be attached: " + e);
+            }
+
+            try {
+                this.sendWithInline(emailSenderUser,
+                        user.getEmail(),
+                        "Hola " + user.getUsername() + ", bienvenido a Guestify",
+                        htmlBody,
+                        "banner.png", new ByteArrayResource(qrArr), "image/png"
+                );
+            } catch (MessagingException e) {
+                throw new RuntimeException("Error sending email: " + e);
+            }
+
+        }catch(EntityNotFoundException e){
+            throw new RuntimeException("Error finding user: " + e);
         }
     }
 
@@ -170,7 +181,7 @@ public class MailSenderService {
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
         String htmlBody = thymeleafTemplateEngine.process("notification.html", thymeleafContext);
-        byte[] qrArr = new byte[0];
+        byte[] qrArr;
 
         try {
             qrArr = Files.readAllBytes(Paths.get(ATTACH_PATH+IMAGES_DIR+BANNER_IMG));

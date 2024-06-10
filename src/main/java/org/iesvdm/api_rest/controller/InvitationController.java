@@ -2,6 +2,7 @@ package org.iesvdm.api_rest.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.iesvdm.api_rest.domain.Invitation;
+import org.iesvdm.api_rest.dto.InvitationDTO;
 import org.iesvdm.api_rest.service.InvitationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,8 +51,8 @@ public class InvitationController {
     }
 
     @GetMapping( "/{id}")
-    public Invitation one(@PathVariable("id") Long id) {
-        return invitationService.one(id);
+    public InvitationDTO one(@PathVariable("id") Long id) {
+        return invitationService.oneMapped(id);
     }
 
     @PostMapping({"","/"})
