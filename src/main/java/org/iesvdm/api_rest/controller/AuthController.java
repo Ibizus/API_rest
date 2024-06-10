@@ -80,7 +80,7 @@ public class AuthController {
         Set<String> strRoles = registerRequest.getRoles();
         Set<Rol> roles = new HashSet<>();
 
-        if (strRoles == null) {
+        if (strRoles.contains(null)) {
             Rol userRole = rolRepository.findByRol(ERol.ROL_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado."));
             roles.add(userRole);

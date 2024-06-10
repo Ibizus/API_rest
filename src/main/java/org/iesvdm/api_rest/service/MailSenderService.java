@@ -104,22 +104,22 @@ public class MailSenderService {
         thymeleafContext.setVariables(templateModel);
         String htmlBody = thymeleafTemplateEngine.process("invitation.html", thymeleafContext);
         byte[] qrArr = new byte[0];
-        byte[] qrArr2 = new byte[0];
+        //byte[] qrArr2 = new byte[0];
 
         try {
             qrArr = Files.readAllBytes(Paths.get(ATTACH_PATH+IMAGES_DIR+BANNER_IMG));
-            qrArr2 = Files.readAllBytes(Paths.get("fileName"));
+            //qrArr2 = Files.readAllBytes(Paths.get("fileName"));
         } catch (IOException e) {
             throw new RuntimeException("Error reading file to be attached: " + e);
         }
 
-        try {
-            this.sendWithAttach(emailSenderUser,
+        try { // Use sendWithAttach to add pdf Invitation:
+            this.sendWithInline(emailSenderUser,
                     targetInvitation.getEmail(),
                     "Hola " + targetInvitation.getName() + ", tienes una invitación",
                     htmlBody,
-                    "banner.png", new ByteArrayResource(qrArr), "image/png",
-                    "fileName", new ByteArrayResource(qrArr2)
+                    "banner.png", new ByteArrayResource(qrArr), "image/png"
+                    //"fileName", new ByteArrayResource(qrArr2)
             );
         } catch (MessagingException e) {
             throw new RuntimeException("Error sending email: " + e);
