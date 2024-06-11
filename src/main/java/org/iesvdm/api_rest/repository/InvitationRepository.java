@@ -20,4 +20,9 @@ public interface InvitationRepository extends JpaRepository <Invitation, Long> {
             "JOIN Invitation i ON i.wedding.id = w.id " +
             "WHERE i.id = :invitationId")
     Optional<String> findUserEmailByInvitationId(@Param("invitationId") Long invitationId);
+
+    @Query("SELECT w.id FROM Wedding w " +
+            "JOIN Invitation i ON i.wedding.id = w.id " +
+            "WHERE i.id = :invitationId")
+    Optional<Long> findWeddingIdByInvitationId(@Param("invitationId") Long invitationId);
 }

@@ -21,7 +21,7 @@ public class InvitationService {
 
     @Autowired
     InvitationRepository invitationRepository;
-
+    @Autowired
     InvitationMapper invitationMapper;
 
     public List<Invitation> all(){return this.invitationRepository.findAll();}
@@ -63,8 +63,20 @@ public class InvitationService {
     }
 
     public InvitationDTO oneMapped(Long id){
+
         return this.invitationRepository.findById(id).map(invitationMapper::mapToDto)
                 .orElseThrow(()-> new EntityNotFoundException(id, Invitation.class));
+
+//        System.out.println("Looking for invitation");
+//        Invitation invitation = this.invitationRepository.findById(id)
+//                .orElseThrow(()-> new EntityNotFoundException(id, Invitation.class));
+//        System.out.println("Invitation found: " + invitation);
+//
+//        System.out.println("Mapping invitation to dto:");
+//        InvitationDTO dto = this.invitationMapper.mapToDto(invitation);
+//
+//        System.out.println("Dto created: " + dto);
+//        return dto;
     }
 
     public Invitation replace(Long id, Invitation invitation){

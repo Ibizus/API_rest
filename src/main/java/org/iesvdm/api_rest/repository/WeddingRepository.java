@@ -11,5 +11,4 @@ public interface WeddingRepository extends JpaRepository<Wedding, Long> {
 
     public Page<Wedding> findWeddingByUser_Id(Long id, Pageable pageable);
 
-
 }

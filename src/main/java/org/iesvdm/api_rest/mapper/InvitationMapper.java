@@ -2,8 +2,15 @@ package org.iesvdm.api_rest.mapper;
 
 import org.iesvdm.api_rest.domain.Invitation;
 import org.iesvdm.api_rest.dto.InvitationDTO;
+import org.iesvdm.api_rest.repository.InvitationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class InvitationMapper {
+
+    @Autowired
+    InvitationRepository invitationRepository;
 
     public InvitationDTO mapToDto(Invitation invitation) {
 
@@ -16,8 +23,11 @@ public class InvitationMapper {
         dto.setAccepted(invitation.getAccepted());
         dto.setAllergies(invitation.getAllergies());
 
-        dto.setGuestId(invitation.getGuest().getId());
-        dto.setWeddingId(invitation.getWedding().getId());
+        if(invitation.getGuest()!=null){
+            dto.setGuestId(invitation.getGuest().getId());
+        }
+
+        dto.setWeddingId(invitationRepository.findWeddingIdByInvitationId(invitation.getId()).get());
 
         return dto;
     }
