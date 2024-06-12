@@ -1,15 +1,22 @@
 package org.iesvdm.api_rest;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.iesvdm.api_rest.controller.UserController;
 import org.iesvdm.api_rest.domain.*;
 import org.iesvdm.api_rest.repository.*;
+import org.iesvdm.api_rest.service.AuthService;
+import org.iesvdm.api_rest.service.UserService;
+import org.iesvdm.api_rest.util.UtilLazy;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,7 +25,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ApiRestApplicationTests {
 
     @Autowired
+    AuthService authService;
+    @Autowired
     UserRepository userRepository;
+    @Autowired
+    UserService userService;
     @Autowired
     WeddingRepository weddingRepository;
     @Autowired
@@ -31,11 +42,15 @@ class ApiRestApplicationTests {
     GiftRepository giftRepository;
     @Autowired
     FAQRepository faqRepository;
+    @PersistenceContext
+    EntityManager entityManager;
 
     User admin;
     User user;
+    User user2;
     Wedding wedding1;
     Wedding wedding2;
+    Wedding wedding3;
     Menu menuInfantil;
     Menu menuVegano;
     Menu menuCarne;
@@ -46,6 +61,8 @@ class ApiRestApplicationTests {
     Event fiesta;
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private UserController userController;
 
 
 //    @BeforeEach
@@ -59,33 +76,86 @@ class ApiRestApplicationTests {
 //    void contextLoads() {
 //    }
 
+//    public class RegisterRequest {
+//        private String username;
+//        private String password;
+//        private String email;
+//        private Set<String> roles;
+//    }
+//    src/main/resources/rolesInitialization.sql
+
     @Test
     @Order(1)
+    @Sql(scripts = "/rolesInitialization.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void crearUsers(){
-        admin = new User(0L, "Hector", "Lopez", "Diaz", "calle Veleta 2", "", "29651", "Mijas", "Malaga", "665661519", "hector.ldz@gmail.com", "123456", new HashSet<>(), new HashSet<>());
-        user = new User(0L, "Alvaro", "Moreno", "Barreiro", "calle de la Luz 25", "", "29640", "Fuengirola", "Malaga", "666666666", "alvaro@educaand.es", "123456", new HashSet<>(), new HashSet<>());
-        userRepository.save(admin);
-        userRepository.save(user);
+
+        // CREATE ADMIN FIRST:
+        Set<String> adminRole = new HashSet<>();
+        adminRole.add("admin");
+        RegisterRequest newAdmin = new RegisterRequest("admin", "123456", "appguestify@gmail.com", adminRole);
+        authService.registerUser(newAdmin);
+
+        // THEN REGISTER SOME USERS:
+        RegisterRequest newUser = new RegisterRequest("Jose", "123456", "josealzdz@gmail.com", null);
+        Map<String, Object> responseMap = authService.registerUser(newUser);
+        if (responseMap != null && responseMap.containsKey("id")) {
+            User createdUSer = userService.one((Long) responseMap.get("id"));
+            createdUSer.setLastName1("Lopez");
+            createdUSer.setLastName2("Diaz");
+            createdUSer.setAddress("calle Enrique Granados 96");
+            createdUSer.setPostalCode("28660");
+            createdUSer.setCity("Boadilla");
+            createdUSer.setRegion("Madrid");
+            createdUSer.setPhoneNumber("666555444");
+            userRepository.save(createdUSer);
+        }
+
+        RegisterRequest newUser2 = new RegisterRequest("Hector", "123456", "hector.ldz@gmail.com", null);
+        Map<String, Object> responseMap2 = authService.registerUser(newUser2);
+        if (responseMap2 != null && responseMap2.containsKey("id")) {
+            User createdUSer2 = userService.one((Long) responseMap2.get("id"));
+            createdUSer2.setLastName1("Lopez");
+            createdUSer2.setLastName2("Diaz");
+            createdUSer2.setAddress("calle Los Pacos 29");
+            createdUSer2.setPostalCode("29640");
+            createdUSer2.setCity("Fuengirola");
+            createdUSer2.setRegion("Málaga");
+            createdUSer2.setPhoneNumber("666222333");
+            userRepository.save(createdUSer2);
+        }
+
+//        admin = new User(0L, "Hector", "Lopez", "Diaz", "calle Veleta 2", "", "29651", "Mijas", "Malaga", "665661519", "hector.ldz@gmail.com", "123456", new HashSet<>(), new HashSet<>());
+//        user = new User(0L, "Alvaro", "Moreno", "Barreiro", "calle de la Luz 25", "", "29640", "Fuengirola", "Malaga", "666666666", "alvaro@educaand.es", "123456", new HashSet<>(), new HashSet<>());
+//        userRepository.save(admin);
+//        userRepository.save(user);
     }
 
     @Test
     @Order(2)
     void crearWeddings() {
-        user = userRepository.findById(1L).orElse(null);
+        user = userRepository.findById(2L).orElse(null);
 
-        wedding1 = new Wedding(0, "Mi Wedding", LocalDate.now(), LocalTime.now(), "Alvaro", "Loli", "Finca Las Yeguas", "", "29600", "Yecla", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
-        wedding2 = new Wedding(0, "Wedding Cuñis", LocalDate.now(), LocalTime.now(), "Paco", "Caro", "Finca El Agua", "", "29720", "Marbella", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
+        wedding1 = new Wedding(0, "Mi Boda", LocalDate.of(2024, 6, 22), LocalTime.of(17,30), "Alvaro", "Loli", "Finca Las Yeguas", "", "29600", "Yecla", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
+        wedding2 = new Wedding(0, "Boda Cuñis", LocalDate.of(2024, 9, 15), LocalTime.of(12,30), "Paco", "Caro", "Finca El Agua", "", "29720", "Marbella", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
+        wedding3 = new Wedding(0, "Boda de Masu", LocalDate.of(2026, 7, 10), LocalTime.of(19,0), "María Jesús", "Pedro", "Finca O Labrego", "", "63705", "Santiago de Compostela", "Galicia", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
         weddingRepository.save(wedding1);
         weddingRepository.save(wedding2);
+        weddingRepository.save(wedding3);
+
+        user2 = userRepository.findById(3L).orElse(null);
+        Wedding wedding4 = new Wedding(0, "Boda de Ana y Luis", LocalDate.of(2024, 6, 30), LocalTime.of(17,30), "Ana", "Luis", "Hacienda San Rafael", "", "41770", "Sevilla", "Andalucía", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user2);
+        Wedding wedding5 = new Wedding(0, "Boda de Laura y Miguel", LocalDate.of(2025, 4, 22), LocalTime.of(12,45), "Laura", "Miguel", "Cortijo El Sotillo", "", "04100", "Almería", "Andalucía", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user2);
+        weddingRepository.save(wedding4);
+        weddingRepository.save(wedding5);
     }
 
     @Test
     @Order(3)
     void crearEvents() {
-        wedding1 = weddingRepository.findById(1L).orElse(null);
+        wedding1 = weddingRepository.findById(2L).orElse(null);
 
         ceremonia = new Event(0, "Iglesia Niño Jesús", "Celebración del matrimonio", LocalTime.of(18, 0), wedding1);
-        cocktail = new Event(0, "Jardín Finca Las Yeguas", "Bienvenida a la finca", LocalTime.of(19, 30), wedding1);
+        cocktail = new Event(0, "Jardín de la Finca", "Bienvenida a la finca", LocalTime.of(19, 30), wedding1);
         banquete = new Event(0, "Salón interior", "Banquete de weddings", LocalTime.of(21, 0), wedding1);
         fiesta = new Event(0, "Discoteca", "Espectáculo y barra libre para todos", LocalTime.of(23, 30), wedding1);
         eventRepository.save(ceremonia);
@@ -97,24 +167,49 @@ class ApiRestApplicationTests {
     @Test
     @Order(4)
     void crearMenus() {
-        wedding1 = weddingRepository.findById(1L).orElse(null);
+//        wedding1 = weddingRepository.findById(2L).orElse(null);
+        List<Wedding> weddings = weddingRepository.findAll();
 
-        menuInfantil = new Menu(0, "Infantil", "Macarrones con queso", "Salchichas", "Yogur", wedding1);
-        menuVegano = new Menu(0, "Vegano", "Ensalada", "Lasaña vegana", "Pastel de manzana vegano", wedding1);
-        menuCarne = new Menu(0, "Carne", "Crema de Remolacha", "Solomillo", "Coulant", wedding1);
-        menuPescado = new Menu(0, "Pescado", "Ensalada", "Lubina a la sal", "Tarta de queso", wedding1);
-        menuRepository.save(menuInfantil);
-        menuRepository.save(menuVegano);
-        menuRepository.save(menuCarne);
-        menuRepository.save(menuPescado);
+        Menu menuInfantil = new Menu(0, "Infantil", "Macarrones con queso", "Salchichas", "Yogur", null);
+        Menu menuVegano = new Menu(0, "Vegano", "Ensalada", "Lasaña vegana", "Pastel de manzana vegano", null);
+        Menu menuCarne = new Menu(0, "Carne", "Crema de Remolacha", "Solomillo", "Coulant", null);
+        Menu menuPescado = new Menu(0, "Pescado", "Ensalada", "Lubina a la sal", "Tarta de queso", null);
+        Menu menuGourmet1 = new Menu(0, "Carne Gourmet", "Carpaccio de ternera con parmesano", "Lomo de cordero con reducción de vino tinto", "Tarta de chocolate belga", null);
+        Menu menuGourmet2 = new Menu(0, "Gourmet", "Foie gras con mermelada de higos", "Filete mignon con puré trufado", "Soufflé de maracuyá", null);
+        Menu menuGourmet3 = new Menu(0, "Marisco", "Tartar de atún rojo con aguacate", "Langosta Thermidor", "Crème brûlée de vainilla", null);
+
+        List<Menu> menus = new ArrayList<>();
+        menus.add(menuInfantil);
+        menus.add(menuVegano);
+        menus.add(menuCarne);
+        menus.add(menuPescado);
+        menus.add(menuGourmet1);
+        menus.add(menuGourmet2);
+        menus.add(menuGourmet3);
+
+        weddings.forEach(wedding -> {
+            UtilLazy.initializeLazyOneToManyByJoinFetch(
+                    entityManager,
+                    Wedding.class,
+                    Menu.class,
+                    wedding.getId(),
+                    wedding::setMenus);
+            wedding.getMenus().addAll(menus);
+            weddingRepository.save(wedding);
+        });
+
+//        menuRepository.save(menuInfantil);
+//        menuRepository.save(menuVegano);
+//        menuRepository.save(menuCarne);
+//        menuRepository.save(menuPescado);
     }
-
 
 
     @Test
     @Order(5)
     void crearInvitations() {
-        wedding1 = weddingRepository.findById(1L).orElse(null);
+//        wedding1 = weddingRepository.findById(2L).orElse(null);
+        List<Wedding> weddings = weddingRepository.findAll();
 
         String[] listaInvitations = {
                 "Francisco", "Antonio", "José", "Manuel", "María", "Ana", "Carmen", "Elena", "Isabel",
@@ -132,17 +227,23 @@ class ApiRestApplicationTests {
                 "Leo", "Eric", "Izan", "Ariadna", "Noa", "Enzo", "Marco", "Ian"
         };
 
-        for (String nombreInvitado : listaInvitations) {
-            String nombreCorreo = Normalizer.normalize(nombreInvitado, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").replaceAll("\\s+", "").toLowerCase();
-            Invitation invitation = new Invitation(0, nombreInvitado, nombreCorreo+"@email.com", false, "", wedding1, null);
-            invitationRepository.save(invitation);
-        }
+        weddings.forEach(wedding -> {
+            for (String nombreInvitado : listaInvitations) {
+                String nombreCorreo = Normalizer.normalize(nombreInvitado, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").replaceAll("\\s+", "").toLowerCase();
+                Invitation invitation = new Invitation(0, nombreInvitado, nombreCorreo+"@email.com", false, "", wedding, null);
+//                invitationRepository.save(invitation);
+                weddingRepository.save(wedding);
+            }
+
+        });
+
+
     }
 
     @Test
     @Order(6)
     void crearGifts() {
-        wedding1 = weddingRepository.findById(1L).orElse(null);
+        wedding1 = weddingRepository.findById(2L).orElse(null);
 
         String[] listaGifts = {
                 "Viaje", "Lavadora", "Carrito bebe", "Television", "Bicicleta",
@@ -171,7 +272,7 @@ class ApiRestApplicationTests {
     @Test
     @Order(7)
     void crearTasks() {
-        wedding1 = weddingRepository.findById(1L).orElse(null);
+        wedding1 = weddingRepository.findById(2L).orElse(null);
 
         Task tarea1 = new Task(0, "Definir la lista de invitados", LocalDate.of(2024, 10, 15), false, wedding1);
         Task tarea2 = new Task(0, "Reservar la ceremonia y el lugar de la recepción", LocalDate.of(2024, 10, 15), false, wedding1);
@@ -267,10 +368,10 @@ class ApiRestApplicationTests {
     @Test
     @Order(10)
     void testGetUserEmailByInvitationId() { // Test to try JPQL query:
-        Long invitationId = 1L;
+        Long invitationId = 2L;
         Optional<String> userEmail = invitationRepository.findUserEmailByInvitationId(invitationId);
         assertThat(userEmail).isPresent();
-        assertThat(userEmail.get()).isEqualTo("hector.ldz@gmail.com");
+        assertThat(userEmail.get()).isEqualTo("josealzdz@gmail.com");
     }
 
     @Test

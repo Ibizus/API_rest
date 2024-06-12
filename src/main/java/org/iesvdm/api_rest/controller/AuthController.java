@@ -2,62 +2,27 @@ package org.iesvdm.api_rest.controller;
 
 import jakarta.validation.Valid;
 import org.iesvdm.api_rest.domain.*;
-import org.iesvdm.api_rest.repository.RolRepository;
 import org.iesvdm.api_rest.repository.UserRepository;
-import org.iesvdm.api_rest.security.TokenUtils;
-import org.iesvdm.api_rest.service.UserDetailsImpl;
+import org.iesvdm.api_rest.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired
-    AuthenticationManager authenticationManager;
 
     @Autowired
     UserRepository userRepository;
-
     @Autowired
-    RolRepository rolRepository;
-
-    @Autowired
-    PasswordEncoder encoder;
-
-    @Autowired
-    TokenUtils tokenUtils;
+    private AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = tokenUtils.generateToken(authentication);
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("token", token);
-        response.put("id", userDetails.getId());
-        response.put("username", userDetails.getUsername());
-        response.put("email", userDetails.getEmail());
-        response.put("roles", roles);
-
+        Map<String, Object> response = authService.authenticateUser(loginRequest);
         return ResponseEntity.ok(response);
     }
 
@@ -66,45 +31,10 @@ public class AuthController {
 
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email ya registrado"));
+        }else{
+            Map<String, Object> response = authService.registerUser(registerRequest);
+            return ResponseEntity.ok(response);
         }
-
-        // Create new user's account
-        User user = new User(registerRequest.getUsername(),
-                registerRequest.getEmail(),
-                encoder.encode(registerRequest.getPassword()));
-
-        Set<String> strRoles = registerRequest.getRoles();
-        Set<Rol> roles = new HashSet<>();
-
-        if (strRoles.contains(null)) {
-            Rol userRole = rolRepository.findByRol(ERol.ROL_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado."));
-            roles.add(userRole);
-        } else {
-            strRoles.forEach(role -> {
-                switch (role) {
-                    case "admin":
-                        Rol adminRole = rolRepository.findByRol(ERol.ROL_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado."));
-                        roles.add(adminRole);
-
-                        break;
-
-                    default:
-                        Rol userRole = rolRepository.findByRol(ERol.ROL_USER)
-                                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado."));
-                        roles.add(userRole);
-                }
-            });
-        }
-
-        user.setRoles(roles);
-        userRepository.save(user);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("id", user.getId());
-        return ResponseEntity.ok(response);
-        //return ResponseEntity.ok(new MessageResponse("Usuario registrado correctamente!"));
     }
 
 }

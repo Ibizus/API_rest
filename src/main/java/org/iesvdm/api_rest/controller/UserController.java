@@ -34,11 +34,12 @@ public class UserController {
         return userService.findByLastname(filter);
     }
 
-    @PostMapping({"","/"})
-    public User newUser(@RequestBody User user) {
-        log.info("Creting an user = {}", user);
-        return this.userService.save(user);
-    }
+    // Users created through AuthController
+//    @PostMapping({"","/"})
+//    public User newUser(@RequestBody User user) {
+//        log.info("Creting an user = {}", user);
+//        return this.userService.save(user);
+//    }
 
     @GetMapping( "/{id}")
     public User one(@PathVariable("id") Long id) {
