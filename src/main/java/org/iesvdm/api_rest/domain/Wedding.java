@@ -47,7 +47,7 @@ public class Wedding {
     private Set<Menu> menus = new HashSet<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<Invitation> invitations = new HashSet<>();
 
     @JsonManagedReference

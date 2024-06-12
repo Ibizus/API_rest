@@ -6,9 +6,11 @@ import org.iesvdm.api_rest.service.WeddingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -30,8 +32,10 @@ public class WeddingController {
     }
 
     @GetMapping(value = {"","/"}, params = "user")
-    public Page<Wedding> findByUser(@RequestParam Long user){
-        return this.weddingService.findByUser(user);
+    public ResponseEntity<Map<String, Object>> findByUser(@RequestParam Long user){
+
+        Map<String, Object> responseAll = this.weddingService.findByUser(user);
+        return ResponseEntity.ok(responseAll);
     }
 
     @PostMapping({"","/"})

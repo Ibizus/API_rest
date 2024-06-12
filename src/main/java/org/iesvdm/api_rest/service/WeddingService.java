@@ -1,10 +1,12 @@
 package org.iesvdm.api_rest.service;
 
+import org.iesvdm.api_rest.domain.Guest;
 import org.iesvdm.api_rest.domain.Wedding;
 import org.iesvdm.api_rest.exception.EntityNotFoundException;
 import org.iesvdm.api_rest.exception.NotCouplingIdException;
 import org.iesvdm.api_rest.repository.WeddingRepository;
 import org.iesvdm.api_rest.repository.UserRepository;
+import org.iesvdm.api_rest.util.PaginationTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class WeddingService {
@@ -24,9 +27,10 @@ public class WeddingService {
 
     public List<Wedding> all(){return this.weddingRepository.findAll();}
 
-    public Page<Wedding> findByUser(Long user){
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id"));
-        return this.weddingRepository.findWeddingByUser_Id(user, pageable);
+    public Map<String, Object> findByUser(Long user){
+        Pageable paginator = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id"));
+        Page<Wedding> pageAll = this.weddingRepository.findWeddingByUser_Id(user, paginator);
+        return PaginationTool.createPaginatedResponseMap(pageAll, "weddings");
     }
 
     public Wedding save(Wedding wedding){return this.weddingRepository.save(wedding);}

@@ -211,7 +211,7 @@ class ApiRestApplicationTests {
 //        wedding1 = weddingRepository.findById(2L).orElse(null);
         List<Wedding> weddings = weddingRepository.findAll();
 
-        String[] listaInvitations = {
+        String[] nameList = {
                 "Francisco", "Antonio", "José", "Manuel", "María", "Ana", "Carmen", "Elena", "Isabel",
                 "Laura", "David", "Javier", "Daniel", "Sofía", "Luis", "Miguel", "Rosa", "Carlos",
                 "Pedro", "Raúl", "Andrea", "Patricia", "Lucía", "Diego", "Ángela", "Natalia", "Roberto",
@@ -227,16 +227,30 @@ class ApiRestApplicationTests {
                 "Leo", "Eric", "Izan", "Ariadna", "Noa", "Enzo", "Marco", "Ian"
         };
 
+        // create invitations collection:
+        Set<Invitation> invitationsSet = new HashSet<>();
+        for (String nombreInvitado : nameList) {
+            // Create invitation:
+            String nombreCorreo = Normalizer.normalize(nombreInvitado, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").replaceAll("\\s+", "").toLowerCase();
+            Invitation invitation = new Invitation(0, nombreInvitado, nombreCorreo + "@email.com", false, "", null, null);
+            invitation = invitationRepository.save(invitation);
+            invitationsSet.add(invitation);
+        }
+
         weddings.forEach(wedding -> {
-            for (String nombreInvitado : listaInvitations) {
-                String nombreCorreo = Normalizer.normalize(nombreInvitado, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").replaceAll("\\s+", "").toLowerCase();
-                Invitation invitation = new Invitation(0, nombreInvitado, nombreCorreo+"@email.com", false, "", wedding, null);
-//                invitationRepository.save(invitation);
-                weddingRepository.save(wedding);
-            }
-
+            // Iniatialize collection:
+            UtilLazy.initializeLazyOneToManyByJoinFetch(
+                    entityManager,
+                    Wedding.class,
+                    Invitation.class,
+                    wedding.getId(),
+                    wedding::setInvitations);
+            // Add invitations:
+            wedding.getInvitations().addAll(invitationsSet);
+            //wedding.setInvitations(invitationsSet);
+            // Persist wedding:
+            weddingRepository.save(wedding);
         });
-
 
     }
 
