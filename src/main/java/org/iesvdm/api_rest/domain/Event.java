@@ -28,6 +28,7 @@ public class Event {
     @JsonBackReference
     @JsonIgnore
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(cascade =  CascadeType.PERSIST)
+    @JoinColumn(name = "wedding_id")
     private Wedding wedding;
 }

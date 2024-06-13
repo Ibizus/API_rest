@@ -10,4 +10,8 @@ import org.springframework.stereotype.Repository;
 public interface GiftRepository extends JpaRepository <Gift, Long> {
 
     public Page<Gift> findGiftByNameContainingIgnoreCase(String name, Pageable pageable);
+
+    public Page<Gift> findGiftsByNameContainingIgnoreCaseAndWedding_Id(String name, Long id, Pageable pageable);
+
+    public Page<Gift> findByWedding_Id(Long id, Pageable pageable);
 }

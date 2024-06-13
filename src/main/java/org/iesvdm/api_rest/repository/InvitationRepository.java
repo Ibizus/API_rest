@@ -18,8 +18,6 @@ public interface InvitationRepository extends JpaRepository <Invitation, Long> {
 
     public Page<Invitation> findInvitationsByNameContainingIgnoreCaseAndWedding_Id(String name, Long id, Pageable pageable);
 
-    public Page<Invitation> findInvitationsByWedding_Id(Long id, Pageable pageable);
-
     public Page<Invitation> findByWedding_Id(Long id, Pageable pageable);
 
     @Query("SELECT i FROM Invitation i " +

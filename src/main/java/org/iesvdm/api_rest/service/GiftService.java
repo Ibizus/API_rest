@@ -22,22 +22,41 @@ public class GiftService {
 
     public List<Gift> all(){return this.giftRepository.findAll();}
 
-    // Pagination of All data:
-    public Map<String, Object> all(int page, int size){
+    // Pagination of All data by Wedding id:
+    public Map<String, Object> allByWeddingId(long id, int page, int size){
         Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
-        Page<Gift> pageAll = this.giftRepository.findAll(paginator);
+        Page<Gift> pageAll = this.giftRepository.findByWedding_Id(id, paginator);
 
+        System.out.println("Inside allByWeddingId method in Gift Service");
+        System.out.println("PAGINATED RESULT" + pageAll);
         return PaginationTool.createPaginatedResponseMap(pageAll, "gifts");
     }
 
-    // Find by filter and return paginated:
-    public Map<String, Object> findByFilter(int page, int size, String filter){
+    // Find Wedding's gifts by filter and return paginated:
+    public Map<String, Object> findByWeddingIdAndFilter(long id, int page, int size, String filter){
         Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Gift> pageFiltered = this.giftRepository
-                .findGiftByNameContainingIgnoreCase(filter, paginator);
+                .findGiftsByNameContainingIgnoreCaseAndWedding_Id(filter, id, paginator);
 
         return PaginationTool.createPaginatedResponseMap(pageFiltered, "gifts");
     }
+
+//    // Pagination of All data:
+//    public Map<String, Object> all(int page, int size){
+//        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+//        Page<Gift> pageAll = this.giftRepository.findAll(paginator);
+//
+//        return PaginationTool.createPaginatedResponseMap(pageAll, "gifts");
+//    }
+//
+//    // Find by filter and return paginated:
+//    public Map<String, Object> findByFilter(int page, int size, String filter){
+//        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+//        Page<Gift> pageFiltered = this.giftRepository
+//                .findGiftByNameContainingIgnoreCase(filter, paginator);
+//
+//        return PaginationTool.createPaginatedResponseMap(pageFiltered, "gifts");
+//    }
 
     public Gift save(Gift gift){
         return this.giftRepository.save(gift);

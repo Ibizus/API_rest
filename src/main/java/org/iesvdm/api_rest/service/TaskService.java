@@ -22,22 +22,39 @@ public class TaskService {
 
     public List<Task> all(){return this.taskRepository.findAll();}
 
-    // Pagination of All data:
-    public Map<String, Object> all(int page, int size){
+    // Pagination of All data by Wedding id:
+    public Map<String, Object> allByWeddingId(long id, int page, int size){
         Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
-        Page<Task> pageAll = this.taskRepository.findAll(paginator);
+        Page<Task> pageAll = this.taskRepository.findByWedding_Id(id, paginator);
 
         return PaginationTool.createPaginatedResponseMap(pageAll, "tasks");
     }
 
-    // Find by filter and return paginated:
-    public Map<String, Object> findByFilter(int page, int size, String filter){
+    // Find Wedding's tasks by filter and return paginated:
+    public Map<String, Object> findByWeddingIdAndFilter(long id, int page, int size, String filter){
         Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Task> pageFiltered = this.taskRepository
-                .findTaskByDescriptionContainingIgnoreCase(filter, paginator);
+                .findTaskByDescriptionContainingIgnoreCaseAndWedding_Id(filter, id, paginator);
 
         return PaginationTool.createPaginatedResponseMap(pageFiltered, "tasks");
     }
+
+//    // Pagination of All data:
+//    public Map<String, Object> all(int page, int size){
+//        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+//        Page<Task> pageAll = this.taskRepository.findAll(paginator);
+//
+//        return PaginationTool.createPaginatedResponseMap(pageAll, "tasks");
+//    }
+//
+//    // Find by filter and return paginated:
+//    public Map<String, Object> findByFilter(int page, int size, String filter){
+//        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+//        Page<Task> pageFiltered = this.taskRepository
+//                .findTaskByDescriptionContainingIgnoreCase(filter, paginator);
+//
+//        return PaginationTool.createPaginatedResponseMap(pageFiltered, "tasks");
+//    }
 
     public Task save(Task task){
         return this.taskRepository.save(task);

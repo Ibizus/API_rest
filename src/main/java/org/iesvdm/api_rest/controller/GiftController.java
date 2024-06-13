@@ -20,31 +20,33 @@ public class GiftController {
     @Autowired
     private GiftService giftService;
 
-    @GetMapping(value = {"", "/"})
+    @GetMapping(value = {"", "/"}, params = {"!id",})
     public List<Gift> all() {
         return giftService.all();
     }
 
-    @GetMapping(value = {"","/"}, params = {"page", "size", "!filter"})
+    @GetMapping(value = {"","/"}, params = {"id", "page", "size", "!filter"})
     public ResponseEntity<Map<String, Object>> all(
-            @RequestParam(value = "page", defaultValue = "0") int page
-            , @RequestParam(value = "size", defaultValue = "3") int size){
-        log.info("Accessing paginated Gifts");
+            @RequestParam Long id,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "3") int size){
+        log.info("Accessing paginated Gifts by Wedding ID");
         log.info("PAGE: {} & SIZE: {}", page, size);
 
-        Map<String, Object> responseAll = this.giftService.all(page, size);
+        Map<String, Object> responseAll = this.giftService.allByWeddingId(id, page, size);
         return ResponseEntity.ok(responseAll);
     }
 
-    @GetMapping(value = { "", "/" }, params = { "page", "size","filter"})
+    @GetMapping(value = { "", "/" }, params = {"id", "page", "size","filter"})
     public ResponseEntity<Map<String, Object>> all(
+            @RequestParam Long id,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "3") int size,
             @RequestParam String filter) {
-        log.info("Accessing paginated and filtered Gifts");
+        log.info("Accessing paginated and filtered Gifts by Wedding ID");
         log.info("PAGE: " + page + " & SIZE: " + size + " & Filtered by: " + filter);
 
-        Map<String, Object> responseAll = this.giftService.findByFilter(page, size, filter);
+        Map<String, Object> responseAll = this.giftService.findByWeddingIdAndFilter(id, page, size, filter);
         return ResponseEntity.ok(responseAll);
     }
 

@@ -1,6 +1,8 @@
 package org.iesvdm.api_rest.repository;
 
 import org.iesvdm.api_rest.domain.Menu;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +17,7 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     public List<Menu> findMenusByNameContainingIgnoreCaseOrStarterContainingIgnoreCaseOrMainCourseContainingIgnoreCaseOrDessertContainingIgnoreCase
     (String name, String starter, String main, String dessert);
 
+    public Page<Menu> findByWedding_Id(Long id, Pageable pageable);
+
+    public Page<Menu> findMenusByNameContainingIgnoreCaseOrStarterContainingIgnoreCaseOrMainCourseContainingIgnoreCaseOrDessertContainingIgnoreCaseAndWedding_Id(String name, String starter, String main, String dessert, Long id, Pageable pageable);
 }
