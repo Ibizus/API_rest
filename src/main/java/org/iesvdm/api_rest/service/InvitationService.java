@@ -26,22 +26,44 @@ public class InvitationService {
 
     public List<Invitation> all(){return this.invitationRepository.findAll();}
 
-    // Pagination of All data:
-    public Map<String, Object> all(int page, int size){
+    // Pagination of all Invitations by Wedding id:
+    public Map<String, Object> allByWeddingId(long id, int page, int size){
         Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
-        Page<Invitation> pageAll = this.invitationRepository.findAll(paginator);
+        Page<Invitation> pageAll = this.invitationRepository.findByWedding_Id(id, paginator);
 
+        System.out.println("Inside allByWeddingId method in Invitation Service");
+        System.out.println("PAGINATED RESULT" + pageAll);
         return PaginationTool.createPaginatedResponseMap(pageAll, "invitations");
     }
 
-    // Find by filter and return paginated:
-    public Map<String, Object> findByFilter(int page, int size, String filter){
+    // Find Wedding's invitations by filter and return paginated:
+    public Map<String, Object> findByWeddingIdAndFilter(long id, int page, int size, String filter){
         Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Invitation> pageFiltered = this.invitationRepository
-                .findInvitationByNameContainingIgnoreCase(filter, paginator);
+                .findInvitationsByNameContainingIgnoreCaseAndWedding_Id(filter, id, paginator);
 
+        System.out.println("Inside findByWeddingIdAndFilter method in Invitation Service");
         return PaginationTool.createPaginatedResponseMap(pageFiltered, "invitations");
     }
+
+//    // Pagination of All data:
+//    public Map<String, Object> all(int page, int size){
+//        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+//        Page<Invitation> pageAll = this.invitationRepository.findAll(paginator);
+//
+//        System.out.println("Inside all method in Invitation Service");
+//        return PaginationTool.createPaginatedResponseMap(pageAll, "invitations");
+//    }
+//
+//    // Find by filter and return paginated:
+//    public Map<String, Object> findByFilter(int page, int size, String filter){
+//        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+//        Page<Invitation> pageFiltered = this.invitationRepository
+//                .findInvitationByNameContainingIgnoreCase(filter, paginator);
+//
+//        System.out.println("Inside findByFilter method in Invitation Service");
+//        return PaginationTool.createPaginatedResponseMap(pageFiltered, "invitations");
+//    }
 
     // Fetch the user's email (Wedding owner) based on the invitation ID:
     public String getUserEmailByInvitationId(Long invitationId) {
@@ -63,20 +85,8 @@ public class InvitationService {
     }
 
     public InvitationDTO oneMapped(Long id){
-
         return this.invitationRepository.findById(id).map(invitationMapper::mapToDto)
                 .orElseThrow(()-> new EntityNotFoundException(id, Invitation.class));
-
-//        System.out.println("Looking for invitation");
-//        Invitation invitation = this.invitationRepository.findById(id)
-//                .orElseThrow(()-> new EntityNotFoundException(id, Invitation.class));
-//        System.out.println("Invitation found: " + invitation);
-//
-//        System.out.println("Mapping invitation to dto:");
-//        InvitationDTO dto = this.invitationMapper.mapToDto(invitation);
-//
-//        System.out.println("Dto created: " + dto);
-//        return dto;
     }
 
     public Invitation replace(Long id, Invitation invitation){

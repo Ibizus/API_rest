@@ -35,27 +35,27 @@ public class Wedding {
     private String region;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
     private Set<Event> events = new HashSet<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
     private Set<Task> tasks = new HashSet<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
     private Set<Menu> menus = new HashSet<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
     private Set<Invitation> invitations = new HashSet<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
     private Set<Gift> gifts = new HashSet<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "wedding", fetch = FetchType.LAZY, cascade =  CascadeType.ALL)
     private Set<Photo> gallery = new HashSet<>();
 
     @JsonBackReference

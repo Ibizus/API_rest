@@ -2,6 +2,7 @@ package org.iesvdm.api_rest;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.assertj.core.api.Assert;
 import org.iesvdm.api_rest.controller.UserController;
 import org.iesvdm.api_rest.domain.*;
 import org.iesvdm.api_rest.repository.*;
@@ -49,12 +50,6 @@ class ApiRestApplicationTests {
     User user;
     User user2;
     Wedding wedding1;
-    Wedding wedding2;
-    Wedding wedding3;
-    Menu menuInfantil;
-    Menu menuVegano;
-    Menu menuCarne;
-    Menu menuPescado;
     Event ceremonia;
     Event cocktail;
     Event banquete;
@@ -119,11 +114,11 @@ class ApiRestApplicationTests {
     @Test
     @Order(2)
     void crearWeddings() {
-        user = userRepository.findById(2L).orElse(null);
 
-        wedding1 = new Wedding(0, "Mi Boda", LocalDate.of(2024, 6, 22), LocalTime.of(17,30), "Alvaro", "Loli", "Finca Las Yeguas", "", "29600", "Yecla", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
-        wedding2 = new Wedding(0, "Boda Cuñis", LocalDate.of(2024, 9, 15), LocalTime.of(12,30), "Paco", "Caro", "Finca El Agua", "", "29720", "Marbella", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
-        wedding3 = new Wedding(0, "Boda de Masu", LocalDate.of(2026, 7, 10), LocalTime.of(19,0), "María Jesús", "Pedro", "Finca O Labrego", "", "63705", "Santiago de Compostela", "Galicia", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
+        user = userRepository.findById(2L).orElse(null);
+        Wedding wedding1 = new Wedding(0, "Mi Boda", LocalDate.of(2024, 6, 22), LocalTime.of(17,30), "Alvaro", "Loli", "Finca Las Yeguas", "", "29600", "Yecla", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
+        Wedding wedding2 = new Wedding(0, "Boda Cuñis", LocalDate.of(2024, 9, 15), LocalTime.of(12,30), "Paco", "Caro", "Finca El Agua", "", "29720", "Marbella", "Malaga", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
+        Wedding wedding3 = new Wedding(0, "Boda de Masu", LocalDate.of(2026, 7, 10), LocalTime.of(19,0), "María Jesús", "Pedro", "Finca O Labrego", "", "63705", "Santiago de Compostela", "Galicia", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user);
         weddingRepository.save(wedding1);
         weddingRepository.save(wedding2);
         weddingRepository.save(wedding3);
@@ -133,6 +128,7 @@ class ApiRestApplicationTests {
         Wedding wedding5 = new Wedding(0, "Boda de Laura y Miguel", LocalDate.of(2025, 4, 22), LocalTime.of(12,45), "Laura", "Miguel", "Cortijo El Sotillo", "", "04100", "Almería", "Andalucía", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), user2);
         weddingRepository.save(wedding4);
         weddingRepository.save(wedding5);
+
     }
 
     @Test
@@ -153,8 +149,8 @@ class ApiRestApplicationTests {
     @Test
     @Order(4)
     void crearMenus() {
-//        wedding1 = weddingRepository.findById(2L).orElse(null);
         List<Wedding> weddings = weddingRepository.findAll();
+        System.out.println("Encontradas " + weddings.size() + " bodas");
 
         Menu menuInfantil = new Menu(0, "Infantil", "Macarrones con queso", "Salchichas", "Yogur", null);
         Menu menuVegano = new Menu(0, "Vegano", "Ensalada", "Lasaña vegana", "Pastel de manzana vegano", null);
@@ -164,37 +160,45 @@ class ApiRestApplicationTests {
         Menu menuGourmet2 = new Menu(0, "Gourmet", "Foie gras con mermelada de higos", "Filete mignon con puré trufado", "Soufflé de maracuyá", null);
         Menu menuGourmet3 = new Menu(0, "Marisco", "Tartar de atún rojo con aguacate", "Langosta Thermidor", "Crème brûlée de vainilla", null);
 
-        List<Menu> menus = new ArrayList<>();
-        menus.add(menuInfantil);
-        menus.add(menuVegano);
-        menus.add(menuCarne);
-        menus.add(menuPescado);
-        menus.add(menuGourmet1);
-        menus.add(menuGourmet2);
-        menus.add(menuGourmet3);
+        List<Menu> menusList = new ArrayList<>();
+        menusList.add(menuInfantil);
+        menusList.add(menuVegano);
+        menusList.add(menuCarne);
+        menusList.add(menuPescado);
+        menusList.add(menuGourmet1);
+        menusList.add(menuGourmet2);
+        menusList.add(menuGourmet3);
 
         weddings.forEach(wedding -> {
+            System.out.println("inicializando coleccion de la boda con id : " + wedding.getId());
             UtilLazy.initializeLazyOneToManyByJoinFetch(
                     entityManager,
                     Wedding.class,
                     Menu.class,
                     wedding.getId(),
                     wedding::setMenus);
-            wedding.getMenus().addAll(menus);
+
+            menusList.forEach(menu -> {
+                System.out.println("Guardadndo menu en bbdd: " + menu.getName());
+                menu.setId(0L);
+                menu.setWedding(null);
+                Menu newMenu = menuRepository.save(menu);
+                System.out.println("Asociando boda " + wedding.getId() + " al menu " + newMenu.getName() + " con id : " + newMenu.getId());
+                System.out.println("Menu en la lista tiene el ID: " + menu.getId());
+                newMenu.setWedding(wedding);
+                System.out.println("Añadiendo menu a la boda");
+                wedding.getMenus().add(newMenu);
+            });
+            System.out.println("persistiendo boda con id : " + wedding.getId() + " con sus cambios");
             weddingRepository.save(wedding);
         });
-
-//        menuRepository.save(menuInfantil);
-//        menuRepository.save(menuVegano);
-//        menuRepository.save(menuCarne);
-//        menuRepository.save(menuPescado);
     }
 
 
     @Test
     @Order(5)
     void crearInvitations() {
-//        wedding1 = weddingRepository.findById(2L).orElse(null);
+
         List<Wedding> weddings = weddingRepository.findAll();
         String[] nameArray = {
                 "Francisco", "Antonio", "José", "Manuel", "María", "Ana", "Carmen", "Elena", "Isabel",
@@ -220,12 +224,9 @@ class ApiRestApplicationTests {
                     Invitation.class,
                     wedding.getId(),
                     wedding::setInvitations);
-
             // create invitations collection:
-            Set<Invitation> invitationsSet = new HashSet<>();
             List<String> nameList = Arrays.asList(nameArray);
             Collections.shuffle(nameList);
-
             // Create Ramdon so every wedding has different number of invitations:
             Random random = new Random();
             int randomIndex = random.nextInt(nameList.size()/2) + 1;
@@ -234,15 +235,12 @@ class ApiRestApplicationTests {
                 // Create invitation:
                 String emailAddress = Normalizer.normalize(nameList.get(i), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").replaceAll("\\s+", "").toLowerCase();
                 Invitation invitation = new Invitation(0, nameList.get(i), emailAddress + "@email.com", false, "", null, null);
-
                 System.out.println("Creating invitation of " + nameList.get(i) + "for wedding with ID: " + wedding.getId());
-                invitation = invitationRepository.save(invitation);
                 System.out.println("Invitation created with id: " + invitation.getId());
-                invitationsSet.add(invitation);
+                invitation = invitationRepository.save(invitation);
+                invitation.setWedding(wedding);
+                wedding.getInvitations().add(invitation);
             }
-
-            // Add invitations:
-            wedding.setInvitations(invitationsSet);
             // Persist wedding:
             weddingRepository.save(wedding);
         });
@@ -251,9 +249,9 @@ class ApiRestApplicationTests {
     @Test
     @Order(6)
     void crearGifts() {
-        wedding1 = weddingRepository.findById(2L).orElse(null);
 
-        String[] listaGifts = {
+        List<Wedding> weddings = weddingRepository.findAll();
+        String[] giftsArray = {
                 "Viaje", "Lavadora", "Carrito bebe", "Television", "Bicicleta",
                 "Suscripcion Netflix", "Cesta productos artesanos", "Juego de sábanas",
                 "Robot de cocina", "Freidora de aire", "Altavoz bluetooth", "Juegos de cuchillos",
@@ -271,51 +269,98 @@ class ApiRestApplicationTests {
                 "Set de copas de cóctel", "Caja de chocolates"
         };
 
-        for (String nombreRegalo : listaGifts) {
-            Gift regalo = new Gift(0, nombreRegalo, false, wedding1);
-            giftRepository.save(regalo);
-        }
+        weddings.forEach(wedding -> {
+            // Iniatialize collection:
+            UtilLazy.initializeLazyOneToManyByJoinFetch(
+                    entityManager,
+                    Wedding.class,
+                    Gift.class,
+                    wedding.getId(),
+                    wedding::setGifts);
+
+            // Shuffle gift collection:
+            List<String> giftsList = Arrays.asList(giftsArray);
+            Collections.shuffle(giftsList);
+
+            // Create Ramdon so every wedding has different number of gifts:
+            Random random = new Random();
+            int randomIndex = random.nextInt(giftsList.size()/2) + 1;
+
+            for (int i = randomIndex; i < giftsList.size()-1; i++) {
+                // Create gift:
+                Gift regalo = new Gift(0, giftsList.get(i), false, null);
+                regalo = giftRepository.save(regalo);
+                regalo.setWedding(wedding);
+                wedding.getGifts().add(regalo);
+            }
+            // Persist wedding:
+            weddingRepository.save(wedding);
+        });
     }
 
     @Test
     @Order(7)
     void crearTasks() {
-        wedding1 = weddingRepository.findById(2L).orElse(null);
+        List<Wedding> weddings = weddingRepository.findAll();
 
-        Task tarea1 = new Task(0, "Definir la lista de invitados", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea2 = new Task(0, "Reservar la ceremonia y el lugar de la recepción", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea3 = new Task(0, "Fijar un presupuesto", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea4 = new Task(0, "Infórmarse sobre los trámites necesarios", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea5 = new Task(0, "Seleccionar padrinos y damas de honor", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea6 = new Task(0, "Elegir los anillos de matrimonio", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea7 = new Task(0, "Centros de mesa", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea8 = new Task(0, "elegir catering", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea9 = new Task(0, "Contratar fotógrafo", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea10 = new Task(0, "Contratar dj", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea11 = new Task(0, "Ramo y flores de decoración", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea12 = new Task(0, "Planificar transporte", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea13 = new Task(0, "Diseñar invitaciones", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea14 = new Task(0, "Traje novio", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea15 = new Task(0, "Vestido novia", LocalDate.of(2024, 10, 15), false, wedding1);
-        Task tarea16 = new Task(0, "Peluquería", LocalDate.of(2024, 10, 15), false, wedding1);
+        List<Task> taskList = new ArrayList<>();
+        taskList.add(new Task(0, "Definir la lista de invitados", LocalDate.of(2024, 2, 15), false, wedding1));
+        taskList.add(new Task(0, "Reservar la ceremonia y el lugar de la recepción", LocalDate.of(2024, 8, 20), false, wedding1));
+        taskList.add(new Task(0, "Fijar un presupuesto", LocalDate.of(2024, 10, 5), false, wedding1));
+        taskList.add(new Task(0, "Infórmarse sobre los trámites necesarios", LocalDate.of(2024, 12, 30), false, wedding1));
+        taskList.add(new Task(0, "Seleccionar padrinos y damas de honor", LocalDate.of(2025, 1, 15), false, wedding1));
+        taskList.add(new Task(0, "Elegir los anillos de matrimonio", LocalDate.of(2025, 3, 20), false, wedding1));
+        taskList.add(new Task(0, "Centros de mesa", LocalDate.of(2025, 4, 8), false, wedding1));
+        taskList.add(new Task(0, "elegir catering", LocalDate.of(2025, 4, 22), false, wedding1));
+        taskList.add(new Task(0, "Contratar fotógrafo", LocalDate.of(2025, 5, 1), false, wedding1));
+        taskList.add(new Task(0, "Contratar dj", LocalDate.of(2025, 5, 9), false, wedding1));
+        taskList.add(new Task(0, "Ramo y flores de decoración", LocalDate.of(2025, 6, 22), false, wedding1));
+        taskList.add(new Task(0, "Planificar transporte", LocalDate.of(2025, 9, 15), false, wedding1));
+        taskList.add(new Task(0, "Diseñar invitaciones", LocalDate.of(2025, 9, 1), false, wedding1));
+        taskList.add(new Task(0, "Traje novio", LocalDate.of(2025, 10, 17), false, wedding1));
+        taskList.add(new Task(0, "Vestido novia", LocalDate.of(2025, 12, 6), false, wedding1));
+        taskList.add(new Task(0, "Peluquería", LocalDate.of(2026, 5, 2), false, wedding1));
+        taskList.add(new Task(0, "Enviar invitaciones", LocalDate.of(2025, 10, 1), false, wedding1));
+        taskList.add(new Task(0, "Hacer la lista de regalos", LocalDate.of(2025, 8, 20), false, wedding1));
+        taskList.add(new Task(0, "Organizar despedida de soltero/soltera", LocalDate.of(2026, 2, 10), false, wedding1));
+        taskList.add(new Task(0, "Elegir música para la ceremonia", LocalDate.of(2026, 1, 15), false, wedding1));
+        taskList.add(new Task(0, "Probar el menú de la recepción", LocalDate.of(2025, 12, 1), false, wedding1));
+        taskList.add(new Task(0, "Reservar alojamiento para invitados", LocalDate.of(2025, 11, 10), false, wedding1));
+        taskList.add(new Task(0, "Coordinar el ensayo de la boda", LocalDate.of(2026, 4, 15), false, wedding1));
+        taskList.add(new Task(0, "Comprar accesorios de novia", LocalDate.of(2026, 3, 20), false, wedding1));
+        taskList.add(new Task(0, "Seleccionar y confirmar proveedores", LocalDate.of(2026, 1, 5), false, wedding1));
+        taskList.add(new Task(0, "Planificar la luna de miel", LocalDate.of(2026, 2, 25), false, wedding1));
+        taskList.add(new Task(0, "Comprar zapatos de boda", LocalDate.of(2026, 3, 5), false, wedding1));
+        taskList.add(new Task(0, "Organizar el seating plan", LocalDate.of(2026, 4, 10), false, wedding1));
+        taskList.add(new Task(0, "Reunirse con el oficiante de la ceremonia", LocalDate.of(2026, 3, 10), false, wedding1));
+        taskList.add(new Task(0, "Confirmar detalles con el florista", LocalDate.of(2026, 4, 1), false, wedding1));
+        taskList.add(new Task(0, "Hacer pruebas de maquillaje", LocalDate.of(2026, 3, 25), false, wedding1));
 
-        taskRepository.save(tarea1);
-        taskRepository.save(tarea2);
-        taskRepository.save(tarea3);
-        taskRepository.save(tarea4);
-        taskRepository.save(tarea5);
-        taskRepository.save(tarea6);
-        taskRepository.save(tarea7);
-        taskRepository.save(tarea7);
-        taskRepository.save(tarea8);
-        taskRepository.save(tarea9);
-        taskRepository.save(tarea10);
-        taskRepository.save(tarea11);
-        taskRepository.save(tarea12);
-        taskRepository.save(tarea13);
-        taskRepository.save(tarea14);
-        taskRepository.save(tarea15);
-        taskRepository.save(tarea16);
+        weddings.forEach(wedding -> {
+            // Iniatialize collection:
+            UtilLazy.initializeLazyOneToManyByJoinFetch(
+                    entityManager,
+                    Wedding.class,
+                    Task.class,
+                    wedding.getId(),
+                    wedding::setTasks);
+            // Shuffle gift collection:
+            Collections.shuffle(taskList);
+
+            // Create Ramdon so every wedding has different number of gifts:
+            Random random = new Random();
+            int randomIndex = random.nextInt(taskList.size()/2) + 1;
+
+            for (int i = randomIndex; i < taskList.size()-1; i++) {
+                taskList.get(i).setId(0L);
+                taskList.get(i).setWedding(null);
+                Task newTask = taskRepository.saveAndFlush(taskList.get(i));
+                newTask.setWedding(wedding);
+                wedding.getTasks().add(newTask);
+            }
+            // Persist wedding:
+            weddingRepository.save(wedding);
+        });
     }
 
     @Test

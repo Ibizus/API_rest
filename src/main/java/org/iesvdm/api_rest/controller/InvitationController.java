@@ -22,31 +22,34 @@ public class InvitationController {
     @Autowired
     private InvitationService invitationService;
 
-    @GetMapping(value = {"", "/"})
+    @GetMapping(value = {"", "/"}, params = {"!id",})
     public List<Invitation> all() {
+        log.info("Accessing ALL Invitations");
         return invitationService.all();
     }
 
-    @GetMapping(value = {"","/"}, params = {"page", "size", "!filter"})
+    @GetMapping(value = {"","/"}, params = {"id", "page", "size", "!filter"})
     public ResponseEntity<Map<String, Object>> all(
-            @RequestParam(value = "page", defaultValue = "0") int page
-            , @RequestParam(value = "size", defaultValue = "3") int size){
-        log.info("Accessing paginated Invitations");
+            @RequestParam Long id,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "3") int size){
+        log.info("Accessing paginated Invitations by Wedding ID");
         log.info("PAGE: {} & SIZE: {}", page, size);
 
-        Map<String, Object> responseAll = this.invitationService.all(page, size);
+        Map<String, Object> responseAll = this.invitationService.allByWeddingId(id, page, size);
         return ResponseEntity.ok(responseAll);
     }
 
-    @GetMapping(value = { "", "/" }, params = { "page", "size","filter"})
+    @GetMapping(value = { "", "/" }, params = {"id", "page", "size", "filter"})
     public ResponseEntity<Map<String, Object>> all(
+            @RequestParam Long id,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "3") int size,
             @RequestParam String filter) {
-        log.info("Accessing paginated and filtered Invitations");
+        log.info("Accessing paginated and filtered Invitations by Wedding ID");
         log.info("PAGE: " + page + " & SIZE: " + size + " & Filtered by: " + filter);
 
-        Map<String, Object> responseAll = this.invitationService.findByFilter(page, size, filter);
+        Map<String, Object> responseAll = this.invitationService.findByWeddingIdAndFilter(id, page, size, filter);
         return ResponseEntity.ok(responseAll);
     }
 

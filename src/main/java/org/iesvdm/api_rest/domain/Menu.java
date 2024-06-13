@@ -27,6 +27,7 @@ public class Menu {
     @JsonBackReference
     @JsonIgnore
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(cascade =  CascadeType.PERSIST)
+    @JoinColumn(name = "wedding_id")
     private Wedding wedding;
 }
