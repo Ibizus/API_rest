@@ -64,7 +64,6 @@ class ApiRestApplicationTests {
     @Autowired
     private UserController userController;
 
-
 //    @BeforeEach
 //    void inicializa(){
 ////        user = userRepository.findById(1L).orElse(null);
@@ -75,14 +74,6 @@ class ApiRestApplicationTests {
 //    @Order(1)
 //    void contextLoads() {
 //    }
-
-//    public class RegisterRequest {
-//        private String username;
-//        private String password;
-//        private String email;
-//        private Set<String> roles;
-//    }
-//    src/main/resources/rolesInitialization.sql
 
     @Test
     @Order(1)
@@ -123,11 +114,6 @@ class ApiRestApplicationTests {
             createdUSer2.setPhoneNumber("666222333");
             userRepository.save(createdUSer2);
         }
-
-//        admin = new User(0L, "Hector", "Lopez", "Diaz", "calle Veleta 2", "", "29651", "Mijas", "Malaga", "665661519", "hector.ldz@gmail.com", "123456", new HashSet<>(), new HashSet<>());
-//        user = new User(0L, "Alvaro", "Moreno", "Barreiro", "calle de la Luz 25", "", "29640", "Fuengirola", "Malaga", "666666666", "alvaro@educaand.es", "123456", new HashSet<>(), new HashSet<>());
-//        userRepository.save(admin);
-//        userRepository.save(user);
     }
 
     @Test
@@ -210,8 +196,7 @@ class ApiRestApplicationTests {
     void crearInvitations() {
 //        wedding1 = weddingRepository.findById(2L).orElse(null);
         List<Wedding> weddings = weddingRepository.findAll();
-
-        String[] nameList = {
+        String[] nameArray = {
                 "Francisco", "Antonio", "José", "Manuel", "María", "Ana", "Carmen", "Elena", "Isabel",
                 "Laura", "David", "Javier", "Daniel", "Sofía", "Luis", "Miguel", "Rosa", "Carlos",
                 "Pedro", "Raúl", "Andrea", "Patricia", "Lucía", "Diego", "Ángela", "Natalia", "Roberto",
@@ -227,16 +212,6 @@ class ApiRestApplicationTests {
                 "Leo", "Eric", "Izan", "Ariadna", "Noa", "Enzo", "Marco", "Ian"
         };
 
-        // create invitations collection:
-        Set<Invitation> invitationsSet = new HashSet<>();
-        for (String nombreInvitado : nameList) {
-            // Create invitation:
-            String nombreCorreo = Normalizer.normalize(nombreInvitado, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").replaceAll("\\s+", "").toLowerCase();
-            Invitation invitation = new Invitation(0, nombreInvitado, nombreCorreo + "@email.com", false, "", null, null);
-            invitation = invitationRepository.save(invitation);
-            invitationsSet.add(invitation);
-        }
-
         weddings.forEach(wedding -> {
             // Iniatialize collection:
             UtilLazy.initializeLazyOneToManyByJoinFetch(
@@ -245,13 +220,32 @@ class ApiRestApplicationTests {
                     Invitation.class,
                     wedding.getId(),
                     wedding::setInvitations);
+
+            // create invitations collection:
+            Set<Invitation> invitationsSet = new HashSet<>();
+            List<String> nameList = Arrays.asList(nameArray);
+            Collections.shuffle(nameList);
+
+            // Create Ramdon so every wedding has different number of invitations:
+            Random random = new Random();
+            int randomIndex = random.nextInt(nameList.size()/2) + 1;
+
+            for (int i = randomIndex; i < nameList.size()-1; i++) {
+                // Create invitation:
+                String emailAddress = Normalizer.normalize(nameList.get(i), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").replaceAll("\\s+", "").toLowerCase();
+                Invitation invitation = new Invitation(0, nameList.get(i), emailAddress + "@email.com", false, "", null, null);
+
+                System.out.println("Creating invitation of " + nameList.get(i) + "for wedding with ID: " + wedding.getId());
+                invitation = invitationRepository.save(invitation);
+                System.out.println("Invitation created with id: " + invitation.getId());
+                invitationsSet.add(invitation);
+            }
+
             // Add invitations:
-            wedding.getInvitations().addAll(invitationsSet);
-            //wedding.setInvitations(invitationsSet);
+            wedding.setInvitations(invitationsSet);
             // Persist wedding:
             weddingRepository.save(wedding);
         });
-
     }
 
     @Test
