@@ -76,7 +76,7 @@ public class TaskService {
     public Task replace(Long id, Task task){
         return this.taskRepository.findById(id).map(m -> {
             if (id.equals(task.getId())){
-                Wedding wedding = weddingRepository.findWeddingByTask_Id(id);
+                Wedding wedding = weddingRepository.findWeddingByTasks_Id(id);
                 task.setWedding(wedding);
                 return this.taskRepository.save(task);
             }

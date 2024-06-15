@@ -45,32 +45,15 @@ public class GiftService {
         return PaginationTool.createPaginatedResponseMap(pageFiltered, "gifts");
     }
 
-//    // Pagination of All data:
-//    public Map<String, Object> all(int page, int size){
-//        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
-//        Page<Gift> pageAll = this.giftRepository.findAll(paginator);
-//
-//        return PaginationTool.createPaginatedResponseMap(pageAll, "gifts");
-//    }
-//
-//    // Find by filter and return paginated:
-//    public Map<String, Object> findByFilter(int page, int size, String filter){
-//        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
-//        Page<Gift> pageFiltered = this.giftRepository
-//                .findGiftByNameContainingIgnoreCase(filter, paginator);
-//
-//        return PaginationTool.createPaginatedResponseMap(pageFiltered, "gifts");
-//    }
+    public Gift one(Long id){
+        return this.giftRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException(id, Gift.class));
+    }
 
     public Gift save(Long id, Gift gift){
         Wedding wedding = weddingRepository.findById(id).get();
         gift.setWedding(wedding);
         return this.giftRepository.save(gift);
-    }
-
-    public Gift one(Long id){
-        return this.giftRepository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException(id, Gift.class));
     }
 
     public Gift replace(Long id, Gift gift){

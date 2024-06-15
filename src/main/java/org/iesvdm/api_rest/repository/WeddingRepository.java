@@ -13,7 +13,12 @@ public interface WeddingRepository extends JpaRepository<Wedding, Long> {
 
     public Wedding findWeddingByGifts_Id(Long id);
 
-    public Wedding findWeddingByTask_Id(Long id);
+    public Wedding findWeddingByTasks_Id(Long id);
 
-    public Wedding findWeddingByInvitation_Id(Long id);
+    public Wedding findWeddingByInvitations_Id(Long id);
+
+    public Wedding findWeddingByMenus_Id(Long id);
+
+    public Wedding findWeddingByEvents_Id(Long id);
+
 }

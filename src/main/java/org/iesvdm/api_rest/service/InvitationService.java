@@ -98,7 +98,7 @@ public class InvitationService {
     public Invitation replace(Long id, Invitation invitation){
         return this.invitationRepository.findById(id).map(m -> {
             if (id.equals(invitation.getId())){
-                Wedding wedding = weddingRepository.findWeddingByInvitation_Id(id);
+                Wedding wedding = weddingRepository.findWeddingByInvitations_Id(id);
                 invitation.setWedding(wedding);
                 return this.invitationRepository.save(invitation);
             }
