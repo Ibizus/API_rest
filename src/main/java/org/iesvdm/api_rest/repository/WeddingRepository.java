@@ -12,4 +12,8 @@ public interface WeddingRepository extends JpaRepository<Wedding, Long> {
     public Page<Wedding> findWeddingByUser_Id(Long id, Pageable pageable);
 
     public Wedding findWeddingByGifts_Id(Long id);
+
+    public Wedding findWeddingByTask_Id(Long id);
+
+    public Wedding findWeddingByInvitation_Id(Long id);
 }

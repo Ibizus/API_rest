@@ -58,10 +58,12 @@ public class InvitationController {
         return invitationService.oneMapped(id);
     }
 
-    @PostMapping({"","/"})
-    public Invitation newInvitation(@RequestBody Invitation invitation) {
-        log.info("Creando un invitation = " + invitation);
-        return this.invitationService.save(invitation);
+    @PostMapping(value = { "", "/" }, params = {"id"})
+    public Invitation newInvitation(
+            @RequestParam Long id,
+            @RequestBody Invitation invitation) {
+        log.info("Creando un invitation = " + invitation + " para la boda con id " + id);
+        return this.invitationService.save(id, invitation);
     }
 
     @PutMapping("/{id}")

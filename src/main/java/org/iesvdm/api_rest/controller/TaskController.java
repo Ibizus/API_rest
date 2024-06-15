@@ -1,6 +1,7 @@
 package org.iesvdm.api_rest.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.iesvdm.api_rest.domain.Gift;
 import org.iesvdm.api_rest.domain.Task;
 import org.iesvdm.api_rest.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,15 +51,17 @@ public class TaskController {
         return ResponseEntity.ok(responseAll);
     }
 
-    @PostMapping({"","/"})
-    public Task newTask(@RequestBody Task task) {
-        log.info("Creando un task = " + task);
-        return this.taskService.save(task);
-    }
-
     @GetMapping( "/{id}")
     public Task one(@PathVariable("id") Long id) {
         return taskService.one(id);
+    }
+
+    @PostMapping(value = { "", "/" }, params = {"id"})
+    public Task newTask(
+            @RequestParam Long id,
+            @RequestBody Task task) {
+        log.info("Creando un task = " + task + " para la boda con id " + id);
+        return this.taskService.save(id, task);
     }
 
     @PutMapping("/{id}")

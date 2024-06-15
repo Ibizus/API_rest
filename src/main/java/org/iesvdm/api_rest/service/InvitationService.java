@@ -1,11 +1,13 @@
 package org.iesvdm.api_rest.service;
 
 import org.iesvdm.api_rest.domain.Invitation;
+import org.iesvdm.api_rest.domain.Wedding;
 import org.iesvdm.api_rest.dto.InvitationDTO;
 import org.iesvdm.api_rest.exception.EntityNotFoundException;
 import org.iesvdm.api_rest.exception.NotCouplingIdException;
 import org.iesvdm.api_rest.mapper.InvitationMapper;
 import org.iesvdm.api_rest.repository.InvitationRepository;
+import org.iesvdm.api_rest.repository.WeddingRepository;
 import org.iesvdm.api_rest.util.PaginationTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,8 @@ public class InvitationService {
     InvitationRepository invitationRepository;
     @Autowired
     InvitationMapper invitationMapper;
+    @Autowired
+    WeddingRepository weddingRepository;
 
     public List<Invitation> all(){return this.invitationRepository.findAll();}
 
@@ -75,7 +79,9 @@ public class InvitationService {
         return output;
     }
 
-    public Invitation save(Invitation invitation){
+    public Invitation save(Long id, Invitation invitation){
+        Wedding wedding = weddingRepository.findById(id).get();
+        invitation.setWedding(wedding);
         return this.invitationRepository.save(invitation);
     }
 
@@ -91,7 +97,11 @@ public class InvitationService {
 
     public Invitation replace(Long id, Invitation invitation){
         return this.invitationRepository.findById(id).map(m -> {
-            if (id.equals(invitation.getId())) return this.invitationRepository.save(invitation);
+            if (id.equals(invitation.getId())){
+                Wedding wedding = weddingRepository.findWeddingByInvitation_Id(id);
+                invitation.setWedding(wedding);
+                return this.invitationRepository.save(invitation);
+            }
             else throw new NotCouplingIdException(id, invitation.getId(), Invitation.class);
         }).orElseThrow(()-> new EntityNotFoundException(id, Invitation.class));
     }

@@ -1,9 +1,12 @@
 package org.iesvdm.api_rest.service;
 
+import org.iesvdm.api_rest.domain.Gift;
 import org.iesvdm.api_rest.domain.Task;
+import org.iesvdm.api_rest.domain.Wedding;
 import org.iesvdm.api_rest.exception.EntityNotFoundException;
 import org.iesvdm.api_rest.exception.NotCouplingIdException;
 import org.iesvdm.api_rest.repository.TaskRepository;
+import org.iesvdm.api_rest.repository.WeddingRepository;
 import org.iesvdm.api_rest.util.PaginationTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +22,8 @@ public class TaskService {
 
     @Autowired
     TaskRepository taskRepository;
+    @Autowired
+    WeddingRepository weddingRepository;
 
     public List<Task> all(){return this.taskRepository.findAll();}
 
@@ -56,7 +61,10 @@ public class TaskService {
 //        return PaginationTool.createPaginatedResponseMap(pageFiltered, "tasks");
 //    }
 
-    public Task save(Task task){
+    public Task save(Long id, Task task){
+        Wedding wedding = weddingRepository.findById(id).get();
+        task.setWedding(wedding);
+
         return this.taskRepository.save(task);
     }
 
@@ -67,7 +75,11 @@ public class TaskService {
 
     public Task replace(Long id, Task task){
         return this.taskRepository.findById(id).map(m -> {
-            if (id.equals(task.getId())) return this.taskRepository.save(task);
+            if (id.equals(task.getId())){
+                Wedding wedding = weddingRepository.findWeddingByTask_Id(id);
+                task.setWedding(wedding);
+                return this.taskRepository.save(task);
+            }
             else throw new NotCouplingIdException(id, task.getId(), Task.class);
         }).orElseThrow(()-> new EntityNotFoundException(id, Task.class));
     }
