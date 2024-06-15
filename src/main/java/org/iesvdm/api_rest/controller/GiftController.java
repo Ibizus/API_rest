@@ -55,10 +55,12 @@ public class GiftController {
         return giftService.one(id);
     }
 
-    @PostMapping({"","/"})
-    public Gift newGift(@RequestBody Gift gift) {
-        log.info("Creando un gift = " + gift);
-        return this.giftService.save(gift);
+    @PostMapping(value = { "", "/" }, params = {"id"})
+    public Gift newGift(
+            @RequestParam Long id,
+            @RequestBody Gift gift) {
+        log.info("Creando un gift = " + gift + " para la boda con id " + id);
+        return this.giftService.save(id, gift);
     }
 
     @PutMapping("/{id}")
