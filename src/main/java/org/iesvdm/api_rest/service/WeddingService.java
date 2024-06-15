@@ -29,20 +29,20 @@ public class WeddingService {
 
     // Pagination of All data:
     public Map<String, Object> all(int page, int size){
-        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+        Pageable paginator = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Wedding> pageAll = this.weddingRepository.findAll(paginator);
 
-        return PaginationTool.createPaginatedResponseMap(pageAll, "invitations");
+        return PaginationTool.createPaginatedResponseMap(pageAll, "weddings");
     }
 
     // Find by filter and return paginated:
     public Map<String, Object> findByFilter(int page, int size, String filter){
-        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+        Pageable paginator = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Wedding> pageFiltered = this.weddingRepository
                 .findByNameContainingIgnoreCaseOrPartner1NameContainingIgnoreCaseOrPartner2NameContainingIgnoreCase
                         (filter, filter, filter, paginator);
 
-        return PaginationTool.createPaginatedResponseMap(pageFiltered, "invitations");
+        return PaginationTool.createPaginatedResponseMap(pageFiltered, "weddings");
     }
 
     public Map<String, Object> findByUser(Long user){

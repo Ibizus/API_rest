@@ -6,9 +6,11 @@ import org.iesvdm.api_rest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -25,19 +27,44 @@ public class UserController {
     }
 
     @GetMapping(value = {"", "/"}, params = "name")
-    public Page<User> findByName(@RequestParam("name") String filter){
+    public Page<User> findByName(
+            @RequestParam("name") String filter){
         return userService.findByName(filter);
     }
 
     @GetMapping(value = {"", "/"}, params = "lastname")
-    public Page<User> findByLastname(@RequestParam("lastname") String filter){
+    public Page<User> findByLastname(
+            @RequestParam("lastname") String filter){
         return userService.findByLastname(filter);
+    }
+
+    @GetMapping(value = {"","/"}, params = {"page", "size", "!filter"})
+    public ResponseEntity<Map<String, Object>> all(
+            @RequestParam(value = "page", defaultValue = "0") int page
+            , @RequestParam(value = "size", defaultValue = "3") int size){
+        log.info("Accessing paginated Users");
+        log.info("PAGE: {} & SIZE: {}", page, size);
+
+        Map<String, Object> responseAll = this.userService.all(page, size);
+        return ResponseEntity.ok(responseAll);
+    }
+
+    @GetMapping(value = { "", "/" }, params = { "page", "size","filter"})
+    public ResponseEntity<Map<String, Object>> all(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "3") int size,
+            @RequestParam String filter) {
+        log.info("Accessing paginated and filtered Users");
+        log.info("PAGE: " + page + " & SIZE: " + size + " & Filtered by: " + filter);
+
+        Map<String, Object> responseAll = this.userService.findByFilter(page, size, filter);
+        return ResponseEntity.ok(responseAll);
     }
 
     // Users created through AuthController
 //    @PostMapping({"","/"})
 //    public User newUser(@RequestBody User user) {
-//        log.info("Creting an user = {}", user);
+//        log.info("Creating an user = {}", user);
 //        return this.userService.save(user);
 //    }
 
