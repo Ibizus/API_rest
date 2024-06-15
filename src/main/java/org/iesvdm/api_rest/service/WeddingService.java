@@ -1,6 +1,6 @@
 package org.iesvdm.api_rest.service;
 
-import org.iesvdm.api_rest.domain.Guest;
+import org.iesvdm.api_rest.domain.Wedding;
 import org.iesvdm.api_rest.domain.Wedding;
 import org.iesvdm.api_rest.exception.EntityNotFoundException;
 import org.iesvdm.api_rest.exception.NotCouplingIdException;
@@ -26,6 +26,24 @@ public class WeddingService {
     private UserRepository userRepository;
 
     public List<Wedding> all(){return this.weddingRepository.findAll();}
+
+    // Pagination of All data:
+    public Map<String, Object> all(int page, int size){
+        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<Wedding> pageAll = this.weddingRepository.findAll(paginator);
+
+        return PaginationTool.createPaginatedResponseMap(pageAll, "invitations");
+    }
+
+    // Find by filter and return paginated:
+    public Map<String, Object> findByFilter(int page, int size, String filter){
+        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<Wedding> pageFiltered = this.weddingRepository
+                .findByNameContainingIgnoreCaseOrPartner1NameContainingIgnoreCaseOrPartner2NameContainingIgnoreCase
+                        (filter, filter, filter, paginator);
+
+        return PaginationTool.createPaginatedResponseMap(pageFiltered, "invitations");
+    }
 
     public Map<String, Object> findByUser(Long user){
         Pageable paginator = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id"));

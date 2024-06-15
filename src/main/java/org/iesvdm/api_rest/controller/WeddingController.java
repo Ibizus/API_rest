@@ -26,6 +26,29 @@ public class WeddingController {
         return weddingService.all();
     }
 
+    @GetMapping(value = {"","/"}, params = {"page", "size", "!filter"})
+    public ResponseEntity<Map<String, Object>> all(
+            @RequestParam(value = "page", defaultValue = "0") int page
+            , @RequestParam(value = "size", defaultValue = "3") int size){
+        log.info("Accessing paginated Weddings");
+        log.info("PAGE: {} & SIZE: {}", page, size);
+
+        Map<String, Object> responseAll = this.weddingService.all(page, size);
+        return ResponseEntity.ok(responseAll);
+    }
+
+    @GetMapping(value = { "", "/" }, params = { "page", "size","filter"})
+    public ResponseEntity<Map<String, Object>> all(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "3") int size,
+            @RequestParam String filter) {
+        log.info("Accessing paginated and filtered Weddings");
+        log.info("PAGE: " + page + " & SIZE: " + size + " & Filtered by: " + filter);
+
+        Map<String, Object> responseAll = this.weddingService.findByFilter(page, size, filter);
+        return ResponseEntity.ok(responseAll);
+    }
+
     @GetMapping( "/{id}")
     public Wedding one(@PathVariable("id") Long id) {
         return weddingService.one(id);
@@ -33,7 +56,6 @@ public class WeddingController {
 
     @GetMapping(value = {"","/"}, params = "user")
     public ResponseEntity<Map<String, Object>> findByUser(@RequestParam Long user){
-
         Map<String, Object> responseAll = this.weddingService.findByUser(user);
         return ResponseEntity.ok(responseAll);
     }
