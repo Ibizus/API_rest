@@ -67,7 +67,7 @@ public class WebSecurityConfig {
                             .requestMatchers("v1/api/**").permitAll()
                             .requestMatchers("api/auth/**").permitAll()
                             .requestMatchers("api/prueba/solo-admin").permitAll()
-                            .anyRequest().authenticated();
+                            .anyRequest().permitAll();
                 } );
 
         http.authenticationProvider(authenticationProvider());
