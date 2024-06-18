@@ -1,9 +1,12 @@
+# Build stage
 FROM maven:3-amazoncorretto-21 AS build
+WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-
+# Run stage
 FROM amazoncorretto:21-alpine
-COPY --from=build /target/api_rest.jar api_rest.jar
+WORKDIR /app
+COPY --from=build /app/target/guestifyapi.jar guestifyapi.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar","api_rest.jar"]
+ENTRYPOINT ["java", "-jar", "guestifyapi.jar"]
