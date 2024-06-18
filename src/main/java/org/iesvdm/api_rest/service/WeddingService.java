@@ -39,7 +39,7 @@ public class WeddingService {
     public Map<String, Object> findByFilter(int page, int size, String filter){
         Pageable paginator = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Wedding> pageFiltered = this.weddingRepository
-                .findByNameContainingIgnoreCaseOrPartner1NameContainingIgnoreCaseOrPartner2NameContainingIgnoreCase
+                .findByNameContainingIgnoreCaseOrPartner1nameContainingIgnoreCaseOrPartner2nameContainingIgnoreCase
                         (filter, filter, filter, paginator);
 
         return PaginationTool.createPaginatedResponseMap(pageFiltered, "weddings");

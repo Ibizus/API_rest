@@ -34,7 +34,7 @@ public class GuestService {
     public Map<String, Object> findByFilter(int page, int size, String filter){
         Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Guest> pageFiltered = this.guestRepository
-                .findGuestByNameContainingIgnoreCaseOrLastName1ContainingIgnoreCaseOrLastName2ContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingIgnoreCase
+                .findGuestByNameContainingIgnoreCaseOrLastname1ContainingIgnoreCaseOrLastname2ContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingIgnoreCase
                         (filter, filter, filter, filter, filter, paginator);
 
         return PaginationTool.createPaginatedResponseMap(pageFiltered, "invitations");

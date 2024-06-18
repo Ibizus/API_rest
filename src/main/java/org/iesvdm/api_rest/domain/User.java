@@ -14,7 +14,9 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "user",
+//@Table(name = "user",
+//        indexes = @Index(name = "username_index", columnList = "username"))
+@Table(name = "\"user\"",
         indexes = @Index(name = "username_index", columnList = "username"))
 //uniqueConstraints = {
 //@UniqueConstraint(columnNames = "username"),

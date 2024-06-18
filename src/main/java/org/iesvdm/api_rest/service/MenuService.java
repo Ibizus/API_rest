@@ -41,7 +41,7 @@ public class MenuService {
     public Map<String, Object> findByWeddingIdAndFilter(long id, int page, int size, String filter){
         Pageable paginator = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Menu> pageFiltered = this.menuRepository
-                .findMenusByNameContainingIgnoreCaseOrStarterContainingIgnoreCaseOrMainCourseContainingIgnoreCaseOrDessertContainingIgnoreCaseAndWedding_Id(filter, filter, filter, filter, id, paginator);
+                .findMenusByNameContainingIgnoreCaseOrStarterContainingIgnoreCaseOrMaincourseContainingIgnoreCaseOrDessertContainingIgnoreCaseAndWedding_Id(filter, filter, filter, filter, id, paginator);
 
         return PaginationTool.createPaginatedResponseMap(pageFiltered, "menus");
     }

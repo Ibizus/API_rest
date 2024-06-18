@@ -14,10 +14,10 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     // Metodo que filtra por nombre, primero, segundo y postre y recibe 4 parametros
     // En su ejecución usa la misma cadena pasada como parametro en el endpoint para los 4 campos del método
     // consiguiendo un filtrado de la coleccion por todos sus campos.
-    public List<Menu> findMenusByNameContainingIgnoreCaseOrStarterContainingIgnoreCaseOrMainCourseContainingIgnoreCaseOrDessertContainingIgnoreCase
+    public List<Menu> findMenusByNameContainingIgnoreCaseOrStarterContainingIgnoreCaseOrMaincourseContainingIgnoreCaseOrDessertContainingIgnoreCase
     (String name, String starter, String main, String dessert);
 
     public Page<Menu> findByWedding_Id(Long id, Pageable pageable);
 
-    public Page<Menu> findMenusByNameContainingIgnoreCaseOrStarterContainingIgnoreCaseOrMainCourseContainingIgnoreCaseOrDessertContainingIgnoreCaseAndWedding_Id(String name, String starter, String main, String dessert, Long id, Pageable pageable);
+    public Page<Menu> findMenusByNameContainingIgnoreCaseOrStarterContainingIgnoreCaseOrMaincourseContainingIgnoreCaseOrDessertContainingIgnoreCaseAndWedding_Id(String name, String starter, String main, String dessert, Long id, Pageable pageable);
 }

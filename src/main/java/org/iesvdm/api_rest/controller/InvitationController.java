@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@CrossOrigin("*")
-//@CrossOrigin(origins = {"http://localhost:4200"})
+@CrossOrigin(origins = {"*"})
 @RestController
 @RequestMapping("/v1/api/invitations")
 public class InvitationController {

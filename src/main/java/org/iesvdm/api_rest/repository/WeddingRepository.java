@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WeddingRepository extends JpaRepository<Wedding, Long> {
 
-    public Page<Wedding> findByNameContainingIgnoreCaseOrPartner1NameContainingIgnoreCaseOrPartner2NameContainingIgnoreCase(String name, String partner1name, String partner2name, Pageable pageable);
+    public Page<Wedding> findByNameContainingIgnoreCaseOrPartner1nameContainingIgnoreCaseOrPartner2nameContainingIgnoreCase(String name, String partner1name, String partner2name, Pageable pageable);
 
     public Page<Wedding> findWeddingByUser_Id(Long id, Pageable pageable);
 

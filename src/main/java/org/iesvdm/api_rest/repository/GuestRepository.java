@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GuestRepository extends JpaRepository <Guest, Long> {
 
-    public Page<Guest> findGuestByNameContainingIgnoreCaseOrLastName1ContainingIgnoreCaseOrLastName2ContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingIgnoreCase
+    public Page<Guest> findGuestByNameContainingIgnoreCaseOrLastname1ContainingIgnoreCaseOrLastname2ContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingIgnoreCase
             (String name, String lastname1, String lastname2, String email, String phone, Pageable pageable);
 }

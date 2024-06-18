@@ -32,7 +32,7 @@ public class UserService {
 
     public Page<User> findByLastname(String filter){
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "lastname1"));
-        return this.userRepository.findUsersByLastName1ContainingIgnoreCaseOrLastName2ContainingIgnoreCase(filter, filter, pageable);
+        return this.userRepository.findUsersByLastname1ContainingIgnoreCaseOrLastname2ContainingIgnoreCase(filter, filter, pageable);
     }
 
     // Pagination of All data:
@@ -47,7 +47,7 @@ public class UserService {
     public Map<String, Object> findByFilter(int page, int size, String filter){
         Pageable paginator = PageRequest.of(page, size, Sort.by("id").descending());
         Page<User> pageFiltered = this.userRepository
-                .findUsersByUsernameContainingIgnoreCaseOrLastName1ContainingIgnoreCaseOrLastName2ContainingIgnoreCase
+                .findUsersByUsernameContainingIgnoreCaseOrLastname1ContainingIgnoreCaseOrLastname2ContainingIgnoreCase
                         (filter, filter, filter, paginator);
 
         return PaginationTool.createPaginatedResponseMap(pageFiltered, "users");
