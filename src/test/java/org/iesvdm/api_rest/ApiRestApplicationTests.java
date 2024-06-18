@@ -2,7 +2,6 @@ package org.iesvdm.api_rest;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.assertj.core.api.Assert;
 import org.iesvdm.api_rest.controller.UserController;
 import org.iesvdm.api_rest.domain.*;
 import org.iesvdm.api_rest.repository.*;
@@ -82,13 +81,13 @@ class ApiRestApplicationTests {
         Map<String, Object> responseMap = authService.registerUser(newUser);
         if (responseMap != null && responseMap.containsKey("id")) {
             User createdUSer = userService.one((Long) responseMap.get("id"));
-            createdUSer.setLastName1("Lopez");
-            createdUSer.setLastName2("Diaz");
+            createdUSer.setLastname1("Lopez");
+            createdUSer.setLastname2("Diaz");
             createdUSer.setAddress("calle Enrique Granados 96");
-            createdUSer.setPostalCode("28660");
+            createdUSer.setPostalcode("28660");
             createdUSer.setCity("Boadilla");
             createdUSer.setRegion("Madrid");
-            createdUSer.setPhoneNumber("666555444");
+            createdUSer.setPhonenumber("666555444");
             userRepository.save(createdUSer);
         }
 
@@ -96,13 +95,13 @@ class ApiRestApplicationTests {
         Map<String, Object> responseMap2 = authService.registerUser(newUser2);
         if (responseMap2 != null && responseMap2.containsKey("id")) {
             User createdUSer2 = userService.one((Long) responseMap2.get("id"));
-            createdUSer2.setLastName1("Lopez");
-            createdUSer2.setLastName2("Diaz");
+            createdUSer2.setLastname1("Lopez");
+            createdUSer2.setLastname2("Diaz");
             createdUSer2.setAddress("calle Los Pacos 29");
-            createdUSer2.setPostalCode("29640");
+            createdUSer2.setPostalcode("29640");
             createdUSer2.setCity("Fuengirola");
             createdUSer2.setRegion("Málaga");
-            createdUSer2.setPhoneNumber("666222333");
+            createdUSer2.setPhonenumber("666222333");
             userRepository.save(createdUSer2);
         }
     }

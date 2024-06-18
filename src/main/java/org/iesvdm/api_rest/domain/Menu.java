@@ -21,7 +21,7 @@ public class Menu {
 
     private String name;
     private String starter;
-    private String mainCourse;
+    private String maincourse;
     private String dessert;
 
     @JsonBackReference

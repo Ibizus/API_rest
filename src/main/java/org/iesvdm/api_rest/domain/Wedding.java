@@ -26,11 +26,11 @@ public class Wedding {
     private String name;
     private LocalDate date;
     private LocalTime time;
-    private String partner1Name;
-    private String partner2Name;
+    private String partner1name;
+    private String partner2name;
     private String address;
     private String address2;
-    private String postalCode;
+    private String postalcode;
     private String city;
     private String region;
 

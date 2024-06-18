@@ -20,8 +20,8 @@ public class Guest {
     private long id;
 
     private String name;
-    private String lastName1;
-    private String lastName2;
+    private String lastname1;
+    private String lastname2;
     private String email;
     private String phone;
 

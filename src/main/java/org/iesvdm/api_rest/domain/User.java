@@ -31,14 +31,14 @@ public class User {
     @Size(max = 20)
     private String username;
 
-    private String lastName1;
-    private String lastName2;
+    private String lastname1;
+    private String lastname2;
     private String address;
     private String address2;
-    private String postalCode;
+    private String postalcode;
     private String city;
     private String region;
-    private String phoneNumber;
+    private String phonenumber;
 
     @NotBlank
     @Size(max = 50)
