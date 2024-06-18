@@ -4,6 +4,9 @@ WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
+# Debugging: List files in /app/target to confirm the jar is created
+RUN ls -la /app/target
+
 # Run stage
 FROM amazoncorretto:21-alpine
 WORKDIR /app
