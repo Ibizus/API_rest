@@ -61,13 +61,13 @@ public class InvitationController {
     @PostMapping(value = { "", "/" }, params = {"id"})
     public Invitation newInvitation(
             @RequestParam Long id,
-            @RequestBody Invitation invitation) {
+            @RequestBody InvitationDTO invitation) {
         log.info("Creando un invitation = " + invitation + " para la boda con id " + id);
         return this.invitationService.save(id, invitation);
     }
 
     @PutMapping("/{id}")
-    public Invitation replaceInvitation(@PathVariable("id") Long id, @RequestBody Invitation invitation) {
+    public Invitation replaceInvitation(@PathVariable("id") Long id, @RequestBody InvitationDTO invitation) {
         log.info("Updating invitation con id = " + id + "\n invitation = " + invitation);
         return this.invitationService.replace(id, invitation);
     }

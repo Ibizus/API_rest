@@ -32,7 +32,7 @@ public class InvitationService {
 
     // Pagination of all Invitations by Wedding id:
     public Map<String, Object> allByWeddingId(long id, int page, int size){
-        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+        Pageable paginator = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Invitation> pageAll = this.invitationRepository.findByWedding_Id(id, paginator);
 
         System.out.println("Inside allByWeddingId method in Invitation Service");
@@ -79,8 +79,10 @@ public class InvitationService {
         return output;
     }
 
-    public Invitation save(Long id, Invitation invitation){
+    public Invitation save(Long id, InvitationDTO invitationDto){
         Wedding wedding = weddingRepository.findById(id).get();
+
+        Invitation invitation = invitationMapper.mapToInvitation(invitationDto);
         invitation.setWedding(wedding);
         return this.invitationRepository.save(invitation);
     }
@@ -95,7 +97,8 @@ public class InvitationService {
                 .orElseThrow(()-> new EntityNotFoundException(id, Invitation.class));
     }
 
-    public Invitation replace(Long id, Invitation invitation){
+    public Invitation replace(Long id, InvitationDTO invitationDto){
+        Invitation invitation = invitationMapper.mapToInvitation(invitationDto);
         return this.invitationRepository.findById(id).map(m -> {
             if (id.equals(invitation.getId())){
                 Wedding wedding = weddingRepository.findWeddingByInvitations_Id(id);

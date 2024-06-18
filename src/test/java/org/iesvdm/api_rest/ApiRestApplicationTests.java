@@ -46,14 +46,10 @@ class ApiRestApplicationTests {
     @PersistenceContext
     EntityManager entityManager;
 
-    User admin;
     User user;
     User user2;
     Wedding wedding1;
-    Event ceremonia;
-    Event cocktail;
-    Event banquete;
-    Event fiesta;
+
     @Autowired
     private TaskRepository taskRepository;
     @Autowired
@@ -136,104 +132,100 @@ class ApiRestApplicationTests {
     void crearEvents() {
         List<Wedding> weddings = weddingRepository.findAll();
 
-        ceremonia = new Event(0, "Iglesia Niño Jesús", "Celebración del matrimonio", LocalTime.of(18, 0), weddings.get(0));
-        cocktail = new Event(0, "Jardín de la Finca", "Bienvenida a la finca", LocalTime.of(19, 30), weddings.get(0));
-        banquete = new Event(0, "Salón interior", "Banquete de weddings", LocalTime.of(21, 0), weddings.get(0));
-        fiesta = new Event(0, "Discoteca", "Espectáculo y barra libre para todos", LocalTime.of(23, 30), weddings.get(0));
-        eventRepository.save(ceremonia);
-        eventRepository.save(cocktail);
-        eventRepository.save(banquete);
-        eventRepository.save(fiesta);
+        // First wedding:
+        List<Event> eventList1 = new ArrayList<>();
+        eventList1.add(new Event(0, "Iglesia Niño Jesús", "Celebración del matrimonio", LocalTime.of(18, 0), null));
+        eventList1.add(new Event(0, "Jardín de la Finca", "Bienvenida a la finca", LocalTime.of(19, 30), null));
+        eventList1.add(new Event(0, "Salón interior", "Banquete de weddings", LocalTime.of(21, 0), null));
+        eventList1.add(new Event(0, "Discoteca", "Espectáculo y barra libre para todos", LocalTime.of(23, 30), null));
         UtilLazy.initializeLazyOneToManyByJoinFetch(
                 entityManager,
                 Wedding.class,
                 Event.class,
                 weddings.get(0).getId(),
                 weddings.get(0)::setEvents);
-        weddings.get(0).getEvents().add(ceremonia);
-        weddings.get(0).getEvents().add(cocktail);
-        weddings.get(0).getEvents().add(banquete);
-        weddings.get(0).getEvents().add(fiesta);
+
+        eventList1.forEach(event -> {
+            eventRepository.save(event);
+            event.setWedding(weddings.get(0));
+            weddings.get(0).getEvents().add(event);
+        });
         weddingRepository.save(weddings.get(0));
 
-        Event ceremonia2 = new Event(0, "Catedral de Santa María", "Ceremonia de la boda", LocalTime.of(17, 0), weddings.get(1));
-        Event cocktail2 = new Event(0, "Terraza del Hotel Royal", "Cóctel de bienvenida", LocalTime.of(18, 30), weddings.get(1));
-        Event banquete2 = new Event(0, "Gran Salón", "Cena y brindis", LocalTime.of(20, 0), weddings.get(1));
-        Event fiesta2 = new Event(0, "Salón de fiestas", "Baile y barra libre", LocalTime.of(22, 30), weddings.get(1));
-        eventRepository.save(ceremonia2);
-        eventRepository.save(cocktail2);
-        eventRepository.save(banquete2);
-        eventRepository.save(fiesta2);
+        // Second wedding:
+        List<Event> eventList2 = new ArrayList<>();
+        eventList2.add(new Event(0, "Catedral de Santa María", "Ceremonia de la boda", LocalTime.of(17, 0), null));
+        eventList2.add(new Event(0, "Gran Salón", "Coctel, cena y brindis", LocalTime.of(19, 0), null));
+        eventList2.add(new Event(0, "Salón de fiestas", "Baile y barra libre", LocalTime.of(22, 30), null));
         UtilLazy.initializeLazyOneToManyByJoinFetch(
                 entityManager,
                 Wedding.class,
                 Event.class,
                 weddings.get(1).getId(),
                 weddings.get(1)::setEvents);
-        weddings.get(1).getEvents().add(ceremonia2);
-        weddings.get(1).getEvents().add(cocktail2);
-        weddings.get(1).getEvents().add(banquete2);
-        weddings.get(1).getEvents().add(fiesta2);
+        eventList2.forEach(event -> {
+            eventRepository.save(event);
+            event.setWedding(weddings.get(1));
+            weddings.get(1).getEvents().add(event);
+        });
         weddingRepository.save(weddings.get(1));
 
-        Event ceremonia3 = new Event(0, "Parroquia San Juan", "Misa de bodas", LocalTime.of(16, 0), weddings.get(2));
-        Event cocktail3 = new Event(0, "Patio del Palacio", "Recepción de bienvenida", LocalTime.of(17, 30), weddings.get(2));
-        Event banquete3 = new Event(0, "Jardines del Palacio", "Banquete al aire libre", LocalTime.of(19, 0), weddings.get(2));
-        Event fiesta3 = new Event(0, "Salón de eventos", "Fiesta y baile", LocalTime.of(21, 30), weddings.get(2));
-        eventRepository.save(ceremonia3);
-        eventRepository.save(cocktail3);
-        eventRepository.save(banquete3);
-        eventRepository.save(fiesta3);
+        // Third wedding:
+        List<Event> eventList3 = new ArrayList<>();
+        eventList3.add(new Event(0, "Parroquia San Juan", "Misa de bodas", LocalTime.of(16, 0), null));
+        eventList3.add(new Event(0, "Patio del Palacio", "Recepción de bienvenida", LocalTime.of(17, 30), null));
+        eventList3.add(new Event(0, "Jardines del Palacio", "Banquete al aire libre", LocalTime.of(19, 0), null));
+        eventList3.add(new Event(0, "Salón de eventos", "Fiesta y baile", LocalTime.of(21, 30), null));
         UtilLazy.initializeLazyOneToManyByJoinFetch(
                 entityManager,
                 Wedding.class,
                 Event.class,
                 weddings.get(2).getId(),
                 weddings.get(2)::setEvents);
-        weddings.get(2).getEvents().add(ceremonia3);
-        weddings.get(2).getEvents().add(cocktail3);
-        weddings.get(2).getEvents().add(banquete3);
-        weddings.get(2).getEvents().add(fiesta3);
+        eventList3.forEach(event -> {
+            eventRepository.save(event);
+            event.setWedding(weddings.get(2));
+            weddings.get(2).getEvents().add(event);
+        });
         weddingRepository.save(weddings.get(2));
 
-        Event ceremonia4 = new Event(0, "Capilla de la Virgen", "Ceremonia religiosa", LocalTime.of(15, 0), weddings.get(3));
-        Event cocktail4 = new Event(0, "Jardín del Club", "Cóctel y aperitivos", LocalTime.of(16, 30), weddings.get(3));
-        Event banquete4 = new Event(0, "Salón principal", "Comida de bodas", LocalTime.of(18, 0), weddings.get(3));
-        Event fiesta4 = new Event(0, "Sala de fiestas", "Celebración y barra libre", LocalTime.of(20, 30), weddings.get(3));
-        eventRepository.save(ceremonia4);
-        eventRepository.save(cocktail4);
-        eventRepository.save(banquete4);
-        eventRepository.save(fiesta4);
+        // Fourth wedding:
+        List<Event> eventList4 = new ArrayList<>();
+        eventList4.add(new Event(0, "Capilla de la Virgen", "Ceremonia religiosa", LocalTime.of(15, 0), null));
+        eventList4.add(new Event(0, "Jardín del Club", "Cóctel y aperitivos", LocalTime.of(16, 30), null));
+        eventList4.add(new Event(0, "Salón principal", "Comida de bodas", LocalTime.of(18, 0), null));
+        eventList4.add(new Event(0, "Sala de fiestas", "Celebración y barra libre", LocalTime.of(20, 30), null));
         UtilLazy.initializeLazyOneToManyByJoinFetch(
                 entityManager,
                 Wedding.class,
                 Event.class,
                 weddings.get(3).getId(),
                 weddings.get(3)::setEvents);
-        weddings.get(3).getEvents().add(ceremonia4);
-        weddings.get(3).getEvents().add(cocktail4);
-        weddings.get(3).getEvents().add(banquete4);
-        weddings.get(3).getEvents().add(fiesta4);
+        eventList4.forEach(event -> {
+            eventRepository.save(event);
+            event.setWedding(weddings.get(3));
+            weddings.get(3).getEvents().add(event);
+        });
         weddingRepository.save(weddings.get(3));
 
-        Event ceremonia5 = new Event(0, "Templo del Amor", "Ritual de matrimonio", LocalTime.of(17, 30), weddings.get(4));
-        Event cocktail5 = new Event(0, "Terraza del Mirador", "Cóctel de bienvenida", LocalTime.of(19, 0), weddings.get(4));
-        Event banquete5 = new Event(0, "Salón del Horizonte", "Cena de gala", LocalTime.of(20, 30), weddings.get(4));
-        Event fiesta5 = new Event(0, "Salón de fiestas", "Baile y barra libre", LocalTime.of(22, 00), weddings.get(4));
-        eventRepository.save(ceremonia5);
-        eventRepository.save(cocktail5);
-        eventRepository.save(banquete5);
-        eventRepository.save(fiesta5);
+        // Fifth wedding:
+        // Fourth wedding:
+        List<Event> eventList5 = new ArrayList<>();
+        eventList5.add(new Event(0, "Templo del Amor", "Ritual de matrimonio", LocalTime.of(17, 30), null));
+        eventList5.add(new Event(0, "Terraza del Mirador", "Cóctel de bienvenida", LocalTime.of(19, 0), null));
+        eventList5.add(new Event(0, "Salón del Horizonte", "Cena de gala", LocalTime.of(20, 30), null));
+        eventList5.add(new Event(0, "Salón de fiestas", "Baile y barra libre", LocalTime.of(22, 00), null));
         UtilLazy.initializeLazyOneToManyByJoinFetch(
                 entityManager,
                 Wedding.class,
                 Event.class,
                 weddings.get(4).getId(),
                 weddings.get(4)::setEvents);
-        weddings.get(4).getEvents().add(ceremonia5);
-        weddings.get(4).getEvents().add(cocktail5);
-        weddings.get(4).getEvents().add(banquete5);
-        weddings.get(4).getEvents().add(fiesta5);
+        eventList5.forEach(event -> {
+            eventRepository.save(event);
+            event.setWedding(weddings.get(4));
+            weddings.get(4).getEvents().add(event);
+        });
         weddingRepository.save(weddings.get(4));
     }
 

@@ -29,7 +29,7 @@ public class TaskService {
 
     // Pagination of All data by Wedding id:
     public Map<String, Object> allByWeddingId(long id, int page, int size){
-        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+        Pageable paginator = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Task> pageAll = this.taskRepository.findByWedding_Id(id, paginator);
 
         return PaginationTool.createPaginatedResponseMap(pageAll, "tasks");
@@ -37,29 +37,12 @@ public class TaskService {
 
     // Find Wedding's tasks by filter and return paginated:
     public Map<String, Object> findByWeddingIdAndFilter(long id, int page, int size, String filter){
-        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
+        Pageable paginator = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Task> pageFiltered = this.taskRepository
                 .findTaskByDescriptionContainingIgnoreCaseAndWedding_Id(filter, id, paginator);
 
         return PaginationTool.createPaginatedResponseMap(pageFiltered, "tasks");
     }
-
-//    // Pagination of All data:
-//    public Map<String, Object> all(int page, int size){
-//        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
-//        Page<Task> pageAll = this.taskRepository.findAll(paginator);
-//
-//        return PaginationTool.createPaginatedResponseMap(pageAll, "tasks");
-//    }
-//
-//    // Find by filter and return paginated:
-//    public Map<String, Object> findByFilter(int page, int size, String filter){
-//        Pageable paginator = PageRequest.of(page, size, Sort.by("id").ascending());
-//        Page<Task> pageFiltered = this.taskRepository
-//                .findTaskByDescriptionContainingIgnoreCase(filter, paginator);
-//
-//        return PaginationTool.createPaginatedResponseMap(pageFiltered, "tasks");
-//    }
 
     public Task save(Long id, Task task){
         Wedding wedding = weddingRepository.findById(id).get();
