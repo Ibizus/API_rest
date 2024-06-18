@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.iesvdm</groupId>
-    <artifactId>API_rest</artifactId>
+    <artifactId>guestifyapi</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>API_rest</name>
     <description>API_rest</description>
